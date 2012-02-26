@@ -831,7 +831,8 @@ int dump_initialize( char *prefix, int ivs_only )
       return( 1 );
     }
   }
-    /* GA Tech modification - gatech_csv */
+
+  /* GA Tech modification - gatech_csv */
   if (G.output_format_gatech_csv)
   {
     memset(ofn, 0, ofn_len);
@@ -845,6 +846,9 @@ int dump_initialize( char *prefix, int ivs_only )
       free( ofn );
       return( 1 );
     }
+
+    fprintf(G.f_gt_csv,
+        "BSSID, time, sequence, power, channel, ESSID\r\n");
   }
 
     /* create the output packet capture file */
@@ -1143,6 +1147,9 @@ int dump_add_packet( unsigned char *h80211, int caplen, struct rx_info *ri, int 
     struct ST_info *st_prv = NULL;
     struct NA_info *na_prv = NULL;
 
+    int gatech_i_am_the_ap = 0;
+    int gatech_power_lvl = 0;
+
     /* skip all non probe response frames in active scanning simulation mode */
     if( G.active_scan_sim > 0 && h80211[0] != 0x50 )
         return(0);
@@ -1295,8 +1302,12 @@ int dump_add_packet( unsigned char *h80211, int caplen, struct rx_info *ri, int 
             memcmp( h80211 + 10, bssid, 6 ) == 0 ) ||
         ( ( h80211[1] & 3 ) == 2 ) )
     {
+        gatech_i_am_the_ap = 1;
+
         ap_cur->power_index = ( ap_cur->power_index + 1 ) % NB_PWR;
         ap_cur->power_lvl[ap_cur->power_index] = ri->ri_power;
+
+        gatech_power_lvl = ri->ri_power;
 
         ap_cur->avg_power = 0;
 
@@ -1347,6 +1358,7 @@ int dump_add_packet( unsigned char *h80211, int caplen, struct rx_info *ri, int 
 //         if(ap_cur->fcapt >= QLT_COUNT) update_rx_quality();
     }
 
+    /* beacon */
     if( h80211[0] == 0x80 )
     {
         ap_cur->nb_bcn++;
@@ -2247,6 +2259,7 @@ write_packet:
 
     if(ap_cur != NULL)
     {
+        /* beacon */
         if( h80211[0] == 0x80 && G.one_beacon){
             if( !ap_cur->beacon_logged )
                 ap_cur->beacon_logged = 1;
@@ -2424,6 +2437,49 @@ write_packet:
                 p+=6;
             }
         }
+    }
+
+    /* GA Tech modification - gatech_csv */
+    if( G.f_gt_csv != NULL && caplen >= 10)
+    {
+      /* TODO: See line 1297 for logic to restrict packets to AP only */
+
+      if(h80211[0] == 0x80 && gatech_i_am_the_ap == 1)
+      {
+        char buffer1[1001];
+        char buffer[2001];
+        char time_buffer[100];
+        struct tm ltime;
+
+        localtime_r(&ap_cur->tlast, &ltime);
+
+        memcpy(buffer1, ap_cur->essid, ap_cur->ssid_length);
+        ap_cur->essid[ap_cur->ssid_length] = 0;
+
+        snprintf(buffer, 1000,
+            "%02X:%02X:%02X:%02X:%02X:%02X, "
+            "%04d-%02d-%02d %02d:%02d:%02d, "
+            "%d, %d, %d, %d, %s\n",
+
+            ap_cur->bssid[0], ap_cur->bssid[1],
+            ap_cur->bssid[2], ap_cur->bssid[3],
+            ap_cur->bssid[4], ap_cur->bssid[5],
+
+            1900 + ltime.tm_year, 1 + ltime.tm_mon,
+            ltime.tm_mday, ltime.tm_hour,
+            ltime.tm_min,  ltime.tm_sec,
+
+            ri->ri_power,
+            ap_cur->channel,
+            seq,
+            ap_cur->ssid_length,
+            buffer1
+            );
+
+        fwrite(buffer, strlen(buffer), 1, G.f_gt_csv);
+
+        /* Power: ri->ri_power */
+      }
     }
 
     if( G.f_cap != NULL && caplen >= 10)
