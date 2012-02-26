@@ -1,3 +1,4 @@
+#!/bin/sh
 file_date=$(date +%m%d%H%M)
 echo -n 'User: '
 read UNAME
