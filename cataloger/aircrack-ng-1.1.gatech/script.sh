@@ -1,5 +1,9 @@
 file_date=$(date +%m%d%H%M)
-mkdir advanced_internet_files
-mkdir advanced_internet_files/$file_date'nishith'
+echo -n 'User: '
+read UNAME
+echo -n 'Location tag: '
+read LOCTAG
+DPATH=advanced_internet_files/$(date +%m%d)-$UNAME/$file_date-$UNAME-$LOCTAG
+mkdir -p $DPATH
 #printf '%s' $file_date
-./src/airodump-ng -f 20000 -w advanced_internet_files/$file_date'nishith'/$file_date --channel 1,6,11 --beacons wlan0
+echo ./src/airodump-ng -f 20000 -w $DPATH/$LOCTAG --channel 1,6,11 --beacons wlan0
