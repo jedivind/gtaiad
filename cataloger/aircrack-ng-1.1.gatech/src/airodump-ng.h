@@ -12,69 +12,69 @@
 #define NB_PWR  5       /* size of signal power ring buffer */
 #define NB_PRB 10       /* size of probed ESSID ring buffer */
 
-#define MAX_CARDS 8	/* maximum number of cards to capture from */
+#define MAX_CARDS 8 /* maximum number of cards to capture from */
 
-#define	STD_OPN		0x0001
-#define	STD_WEP		0x0002
-#define	STD_WPA		0x0004
-#define	STD_WPA2	0x0008
+#define STD_OPN   0x0001
+#define STD_WEP   0x0002
+#define STD_WPA   0x0004
+#define STD_WPA2  0x0008
 
-#define STD_FIELD	(STD_OPN | STD_WEP | STD_WPA | STD_WPA2)
+#define STD_FIELD (STD_OPN | STD_WEP | STD_WPA | STD_WPA2)
 
-#define	ENC_WEP		0x0010
-#define	ENC_TKIP	0x0020
-#define	ENC_WRAP	0x0040
-#define	ENC_CCMP	0x0080
-#define ENC_WEP40	0x1000
-#define	ENC_WEP104	0x0100
+#define ENC_WEP   0x0010
+#define ENC_TKIP  0x0020
+#define ENC_WRAP  0x0040
+#define ENC_CCMP  0x0080
+#define ENC_WEP40 0x1000
+#define ENC_WEP104  0x0100
 
-#define ENC_FIELD	(ENC_WEP | ENC_TKIP | ENC_WRAP | ENC_CCMP | ENC_WEP40 | ENC_WEP104)
+#define ENC_FIELD (ENC_WEP | ENC_TKIP | ENC_WRAP | ENC_CCMP | ENC_WEP40 | ENC_WEP104)
 
-#define	AUTH_OPN	0x0200
-#define	AUTH_PSK	0x0400
-#define	AUTH_MGT	0x0800
+#define AUTH_OPN  0x0200
+#define AUTH_PSK  0x0400
+#define AUTH_MGT  0x0800
 
-#define AUTH_FIELD	(AUTH_OPN | AUTH_PSK | AUTH_MGT)
+#define AUTH_FIELD  (AUTH_OPN | AUTH_PSK | AUTH_MGT)
 
 #define STD_QOS         0x2000
 
-#define	QLT_TIME	5
-#define	QLT_COUNT	25
+#define QLT_TIME  5
+#define QLT_COUNT 25
 
 #define SORT_BY_NOTHING 0
-#define SORT_BY_BSSID	1
-#define SORT_BY_POWER	2
-#define SORT_BY_BEACON	3
-#define SORT_BY_DATA	4
-#define SORT_BY_PRATE	5
-#define SORT_BY_CHAN	6
-#define	SORT_BY_MBIT	7
-#define SORT_BY_ENC	8
-#define SORT_BY_CIPHER	9
-#define SORT_BY_AUTH	10
-#define SORT_BY_ESSID	11
-#define MAX_SORT	11
+#define SORT_BY_BSSID 1
+#define SORT_BY_POWER 2
+#define SORT_BY_BEACON  3
+#define SORT_BY_DATA  4
+#define SORT_BY_PRATE 5
+#define SORT_BY_CHAN  6
+#define SORT_BY_MBIT  7
+#define SORT_BY_ENC 8
+#define SORT_BY_CIPHER  9
+#define SORT_BY_AUTH  10
+#define SORT_BY_ESSID 11
+#define MAX_SORT  11
 
-#define TEXT_RESET	0
-#define TEXT_BRIGHT 	1
-#define TEXT_DIM	2
-#define TEXT_UNDERLINE 	3
-#define TEXT_BLINK	4
-#define TEXT_REVERSE	7
-#define TEXT_HIDDEN	8
+#define TEXT_RESET  0
+#define TEXT_BRIGHT   1
+#define TEXT_DIM  2
+#define TEXT_UNDERLINE  3
+#define TEXT_BLINK  4
+#define TEXT_REVERSE  7
+#define TEXT_HIDDEN 8
 
-#define TEXT_MAX_STYLE	8
+#define TEXT_MAX_STYLE  8
 
-#define TEXT_BLACK 	0
-#define TEXT_RED	1
-#define TEXT_GREEN	2
-#define TEXT_YELLOW	3
-#define TEXT_BLUE	4
-#define TEXT_MAGENTA	5
-#define TEXT_CYAN	6
-#define	TEXT_WHITE	7
+#define TEXT_BLACK  0
+#define TEXT_RED  1
+#define TEXT_GREEN  2
+#define TEXT_YELLOW 3
+#define TEXT_BLUE 4
+#define TEXT_MAGENTA  5
+#define TEXT_CYAN 6
+#define TEXT_WHITE  7
 
-#define TEXT_MAX_COLOR	7
+#define TEXT_MAX_COLOR  7
 
 #define RATES           \
     "\x01\x04\x02\x04\x0B\x16\x32\x08\x0C\x12\x18\x24\x30\x48\x60\x6C"
@@ -151,9 +151,9 @@ struct pkt_buf
 
 /* oui struct for list management */
 struct oui {
-	char id[9]; /* TODO: Don't use ASCII chars to compare, use unsigned char[3] (later) with the value (hex ascii will have to be converted) */
-	char manuf[128]; /* TODO: Switch to a char * later to improve memory usage */
-	struct oui *next;
+  char id[9]; /* TODO: Don't use ASCII chars to compare, use unsigned char[3] (later) with the value (hex ascii will have to be converted) */
+  char manuf[128]; /* TODO: Switch to a char * later to improve memory usage */
+  struct oui *next;
 };
 
 /* linked list of detected access points */
@@ -206,35 +206,35 @@ struct AP_info
     struct timeval ftimel;    /* time of last frame          */
     struct timeval ftimer;    /* time of restart             */
 
-    char *key;		      /* if wep-key found by dict */
+    char *key;          /* if wep-key found by dict */
     int essid_stored;         /* essid stored in ivs file? */
 
     char decloak_detect;      /* run decloak detection? */
     struct pkt_buf *packets;  /* list of captured packets (last few seconds) */
     char is_decloak;          /* detected decloak */
 
-	// This feature eats 48Mb per AP
-	int EAP_detected;
+  // This feature eats 48Mb per AP
+  int EAP_detected;
     unsigned char *data_root; /* first 2 bytes of data if */
-    						  /* WEP network; used for    */
-    						  /* detecting WEP cloak	  */
-    						  /* + one byte to indicate   */
-    						  /* (in)existence of the IV  */
-					  
+                  /* WEP network; used for    */
+                  /* detecting WEP cloak    */
+                  /* + one byte to indicate   */
+                  /* (in)existence of the IV  */
+            
     int marked;
     int marked_color;
 };
 
 struct WPA_hdsk
 {
-    uchar stmac[6];				 /* supplicant MAC               */
-    uchar snonce[32];			 /* supplicant nonce             */
-    uchar anonce[32];			 /* authenticator nonce          */
-    uchar keymic[16];			 /* eapol frame MIC              */
-    uchar eapol[256];			 /* eapol frame contents         */
-    int eapol_size;				 /* eapol frame size             */
-    int keyver;					 /* key version (TKIP / AES)     */
-    int state;					 /* handshake completion         */
+    uchar stmac[6];        /* supplicant MAC               */
+    uchar snonce[32];      /* supplicant nonce             */
+    uchar anonce[32];      /* authenticator nonce          */
+    uchar keymic[16];      /* eapol frame MIC              */
+    uchar eapol[256];      /* eapol frame contents         */
+    int eapol_size;        /* eapol frame size             */
+    int keyver;          /* key version (TKIP / AES)     */
+    int state;           /* handshake completion         */
 };
 
 /* linked list of detected clients */
@@ -311,7 +311,7 @@ struct globals
     int channel[MAX_CARDS];           /* current channel #    */
     int frequency[MAX_CARDS];           /* current frequency #    */
     int ch_pipe[2];         /* current channel pipe */
-    int cd_pipe[2];	    /* current card pipe    */
+    int cd_pipe[2];     /* current card pipe    */
     int gc_pipe[2];         /* gps coordinates pipe */
     float gps_loc[5];       /* gps coordinates      */
     int save_gps;           /* keep gps file flag   */
@@ -320,9 +320,9 @@ struct globals
 //     int *frequencies;
     int singlechan;         /* channel hopping set 1*/
     int singlefreq;         /* frequency hopping: 1 */
-    int chswitch;	    /* switching method     */
+    int chswitch;     /* switching method     */
     int f_encrypt;          /* encryption filter    */
-    int update_s;	    /* update delay in sec  */
+    int update_s;     /* update delay in sec  */
 
     int is_wlanng[MAX_CARDS];          /* set if wlan-ng       */
     int is_orinoco[MAX_CARDS];         /* set if orinoco       */
@@ -331,7 +331,7 @@ struct globals
     volatile int do_exit;            /* interrupt flag       */
     struct winsize ws;      /* console window size  */
 
-    char * elapsed_time;	/* capture time			*/
+    char * elapsed_time;  /* capture time     */
 
     int one_beacon;         /* Record only 1 beacon?*/
 
@@ -342,10 +342,10 @@ struct globals
     int sk_len;
     int sk_len2;
 
-    int * own_channels;	    /* custom channel list  */
-    int * own_frequencies;	    /* custom frequency list  */
+    int * own_channels;     /* custom channel list  */
+    int * own_frequencies;      /* custom frequency list  */
 
-    int record_data;		/* do we record data?   */
+    int record_data;    /* do we record data?   */
     int asso_client;        /* only show associated clients */
 
     char * iwpriv;
@@ -414,10 +414,10 @@ struct globals
     int do_pause;
     int do_sort_always;
     
-    pthread_mutex_t mx_print;			 /* lock write access to ap LL   */
-    pthread_mutex_t mx_sort;			 /* lock write access to ap LL   */
+    pthread_mutex_t mx_print;      /* lock write access to ap LL   */
+    pthread_mutex_t mx_sort;       /* lock write access to ap LL   */
     
-    uchar selected_bssid[6];	/* bssid that is selected */
+    uchar selected_bssid[6];  /* bssid that is selected */
 }
 G;
 
