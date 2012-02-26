@@ -584,6 +584,7 @@ char usage[] =
 "\n"
 "  %s - (C) 2006-2010 Thomas d\'Otreppe\n"
 "  Original work: Christophe Devine\n"
+"  Georgia Tech Mod\n"
 "  http://www.aircrack-ng.org\n"
 "\n"
 "  usage: airodump-ng <options> <interface>[,<interface>,...]\n"
@@ -605,7 +606,7 @@ char usage[] =
 "      -x          <msecs> : Active Scanning Simulation\n"
 "      --output-format\n"
 "                <formats> : Output format. Possible values:\n"
-"                            pcap, ivs, csv, gps, kismet, netxml\n"
+"                            pcap, ivs, csv, gatech, gps, kismet, netxml\n"
 "\n"
 "  Filter options:\n"
 "      --encrypt   <suite> : Filter APs by cipher suite\n"
@@ -823,6 +824,21 @@ int dump_initialize( char *prefix, int ivs_only )
           prefix, G.f_index, KISMET_NETXML_EXT );
 
     if( ( G.f_kis_xml = fopen( ofn, "wb+" ) ) == NULL )
+    {
+      perror( "fopen failed" );
+      fprintf( stderr, "Could not create \"%s\".\n", ofn );
+      free( ofn );
+      return( 1 );
+    }
+  }
+    /* GA Tech modification - gatech_csv */
+  if (G.output_format_gatech_csv)
+  {
+    memset(ofn, 0, ofn_len);
+    snprintf( ofn,  ofn_len, "%s-%02d.%s",
+          prefix, G.f_index, GATECH_CSV_EXT );
+
+    if( ( G.f_gt_csv = fopen( ofn, "wb+" ) ) == NULL )
     {
       perror( "fopen failed" );
       fprintf( stderr, "Could not create \"%s\".\n", ofn );
@@ -5264,6 +5280,7 @@ int main( int argc, char *argv[] )
     G.f_cap        =  NULL;
     G.f_ivs        =  NULL;
     G.f_txt        =  NULL;
+    G.f_gt_csv     =  NULL;
     G.f_kis        =  NULL;
     G.f_kis_xml    =  NULL;
     G.f_gps        =  NULL;
@@ -5296,6 +5313,7 @@ int main( int argc, char *argv[] )
 
   G.output_format_pcap = 1;
     G.output_format_csv = 1;
+    G.output_format_gatech_csv = 1;
     G.output_format_kismet_csv = 1;
     G.output_format_kismet_netxml = 1;
 
@@ -5511,6 +5529,7 @@ int main( int argc, char *argv[] )
 
           G.output_format_pcap = 0;
           G.output_format_csv = 0;
+          G.output_format_gatech_csv = 0;
           G.output_format_kismet_csv = 0;
             G.output_format_kismet_netxml = 0;
         }
@@ -5655,6 +5674,8 @@ int main( int argc, char *argv[] )
             if (strncasecmp(output_format_string, "csv", 3) == 0
               || strncasecmp(output_format_string, "txt", 3) == 0) {
               G.output_format_csv = 1;
+            } else if (strncasecmp(output_format_string, "gatech", 6) == 0) {
+              G.output_format_gatech_csv = 1;
             } else if (strncasecmp(output_format_string, "pcap", 4) == 0
               || strncasecmp(output_format_string, "cap", 3) == 0) {
                             if (ivs_only) {
@@ -5684,11 +5705,13 @@ int main( int argc, char *argv[] )
             } else if (strncasecmp(output_format_string, "default", 6) == 0) {
               G.output_format_pcap = 1;
               G.output_format_csv = 1;
+              G.output_format_gatech_csv = 1;
               G.output_format_kismet_csv = 1;
               G.output_format_kismet_netxml = 1;
             } else if (strncasecmp(output_format_string, "none", 6) == 0) {
               G.output_format_pcap = 0;
               G.output_format_csv = 0;
+              G.output_format_gatech_csv = 0;
               G.output_format_kismet_csv = 0;
                 G.output_format_kismet_netxml = 0;
 
@@ -6024,6 +6047,7 @@ usage:
             /* flush the output files */
 
             if( G.f_cap != NULL ) fflush( G.f_cap );
+            if( G.f_gt_csv != NULL ) fflush( G.f_gt_csv );
             if( G.f_ivs != NULL ) fflush( G.f_ivs );
         }
 
@@ -6316,6 +6340,7 @@ usage:
     }
         if ( G.f_gps != NULL ) fclose( G.f_gps );
         if ( G.output_format_pcap ||  G.f_cap != NULL ) fclose( G.f_cap );
+        if ( G.f_gt_csv != NULL ) fclose( G.f_gt_csv );
         if ( G.f_ivs != NULL ) fclose( G.f_ivs );
     }
 

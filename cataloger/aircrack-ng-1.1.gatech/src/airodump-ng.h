@@ -94,6 +94,7 @@ char *get_manufacturer(unsigned char mac0, unsigned char mac1, unsigned char mac
 #define AIRODUMP_NG_CSV_EXT "csv"
 #define KISMET_CSV_EXT "kismet.csv"
 #define KISMET_NETXML_EXT "kismet.netxml"
+#define GATECH_CSV_EXT "gatech.csv"
 #define AIRODUMP_NG_GPS_EXT "gps"
 #define AIRODUMP_NG_CAP_EXT "cap"
 
@@ -220,7 +221,7 @@ struct AP_info
                   /* detecting WEP cloak    */
                   /* + one byte to indicate   */
                   /* (in)existence of the IV  */
-            
+
     int marked;
     int marked_color;
 };
@@ -300,6 +301,7 @@ struct globals
 
     int f_index;            /* outfiles index       */
     FILE *f_txt;            /* output csv file      */
+    FILE *f_gt_csv;         /* output gatech csv file      */
     FILE *f_kis;            /* output kismet csv file      */
     FILE *f_kis_xml;        /* output kismet netxml file */
     FILE *f_gps;            /* output gps file      */
@@ -397,6 +399,7 @@ struct globals
 
     int output_format_pcap;
     int output_format_csv;
+    int output_format_gatech_csv;
     int output_format_kismet_csv;
     int output_format_kismet_netxml;
     pthread_t input_tid;
@@ -413,10 +416,10 @@ struct globals
     int skip_columns;
     int do_pause;
     int do_sort_always;
-    
+
     pthread_mutex_t mx_print;      /* lock write access to ap LL   */
     pthread_mutex_t mx_sort;       /* lock write access to ap LL   */
-    
+
     uchar selected_bssid[6];  /* bssid that is selected */
 }
 G;
