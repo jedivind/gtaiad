@@ -848,7 +848,7 @@ int dump_initialize( char *prefix, int ivs_only )
     }
 
     fprintf(G.f_gt_csv,
-        "BSSID, time, sequence, power, channel, ESSID\r\n");
+        "BSSID, time, power, channel, sequence, essid_length, ESSID\n");
   }
 
     /* create the output packet capture file */
