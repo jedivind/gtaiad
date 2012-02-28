@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE detection-run SYSTEM "http://kismetwireless.net/kismet-3.1.0.dtd">
+
+<detection-run kismet-version="airodump-ng-1.0" start-time="Sun Feb 26 12:17:00 2012">
+
+	<wireless-network number="1" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>4</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA2 WPA AES-CCMTKIP</encryption>
+			<essid cloaked="false">GTwpa</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:46:B4</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>6</channel>
+		<freqmhz>2437 7</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>4</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>7</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<wireless-client number="1" type="established" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:00 2012">
+			<client-mac>AC:72:89:31:49:6C</client-mac>
+			<client-manuf>Intel Corporate</client-manuf>
+			<channel>6</channel>
+			<maxseenrate>6.000000</maxseenrate>
+			<packets>
+				<LLC>0</LLC>
+				<data>0</data>
+				<crypt>0</crypt>
+				<total>2</total>
+				<fragments>0</fragments>
+				<retries>0</retries>
+			</packets>
+			<snr-info>
+				<last_signal_dbm>-17</last_signal_dbm>
+				<last_noise_dbm>0</last_noise_dbm>
+				<last_signal_rssi>-17</last_signal_rssi>
+				<last_noise_rssi>0</last_noise_rssi>
+				<min_signal_dbm>-17</min_signal_dbm>
+				<min_noise_dbm>0</min_noise_dbm>
+				<min_signal_rssi>1024</min_signal_rssi>
+				<min_noise_rssi>1024</min_noise_rssi>
+				<max_signal_dbm>-17</max_signal_dbm>
+				<max_noise_dbm>0</max_noise_dbm>
+				<max_signal_rssi>-17</max_signal_rssi>
+				<max_noise_rssi>0</max_noise_rssi>
+			</snr-info>
+			<cdp-device></cdp-device>
+			<cdp-portid></cdp-portid>
+		</wireless-client>
+		<snr-info>
+			<last_signal_dbm>-68</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-68</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-68</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-68</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-68</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="2" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>3</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA TKIP</encryption>
+			<essid cloaked="false">WODNET</essid>
+		</SSID>
+		<BSSID>00:18:F8:CB:1C:6A</BSSID>
+		<manuf>Cisco-Linksys LLC</manuf>
+		<channel>6</channel>
+		<freqmhz>2437 3</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>3</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>3</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-78</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-78</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-78</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-78</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-78</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="3" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>3</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA2 AES-CCM</encryption>
+			<essid cloaked="false">palantir</essid>
+		</SSID>
+		<BSSID>00:1C:10:5A:B6:D7</BSSID>
+		<manuf>Cisco-Linksys, LLC</manuf>
+		<channel>6</channel>
+		<freqmhz>2437 3</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>3</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>3</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-86</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-86</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-86</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-86</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-86</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="4" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:02 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>3</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>OPN </encryption>
+			<essid cloaked="false">GTvisitor</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:46:B7</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>6</channel>
+		<freqmhz>2437 3</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>3</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>3</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-69</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-69</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-69</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-69</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-69</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="5" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>9</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA2 WPA AES-CCMTKIP</encryption>
+			<essid cloaked="false">GTwpa</essid>
+		</SSID>
+		<BSSID>08:1F:F3:E1:90:44</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 9</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>9</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>9</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-77</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-77</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-77</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-77</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-77</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="6" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>6</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>OPN </encryption>
+			<essid cloaked="false">GTvisitor</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:43:17</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 6</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>6</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>6</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-82</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-82</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-82</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-82</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-82</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="7" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>8</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WEP </encryption>
+			<essid cloaked="false">GTwireless</essid>
+		</SSID>
+		<BSSID>08:1F:F3:E1:90:41</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 8</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>8</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>8</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-79</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-79</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-79</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-79</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-79</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="8" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>9</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>OPN </encryption>
+			<essid cloaked="false">GTvisitor</essid>
+		</SSID>
+		<BSSID>08:1F:F3:E1:90:47</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 9</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>9</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>9</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-77</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-77</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-77</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-77</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-77</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="9" type="infrastructure" first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:00 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>6</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA2 WPA AES-CCMTKIP</encryption>
+			<essid cloaked="false">GTwpa</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:43:14</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 6</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>6</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>6</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-82</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-82</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-82</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-82</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-82</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="10" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>2</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WPA2 WPA AES-CCMTKIP</encryption>
+			<essid cloaked="false">GTwpa</essid>
+		</SSID>
+		<BSSID>1C:17:D3:33:1A:74</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 2</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>2</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>2</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-86</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-86</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-86</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-86</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-86</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="11" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>8</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WEP </encryption>
+			<essid cloaked="false">GTwireless</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:43:11</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 8</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>8</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>8</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-83</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-83</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-83</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-83</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-83</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="12" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>5</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WEP </encryption>
+			<essid cloaked="false">GTwireless</essid>
+		</SSID>
+		<BSSID>1C:17:D3:33:1A:71</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 5</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>5</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>5</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-85</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-85</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-85</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-85</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-85</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="13" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>3</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>OPN </encryption>
+			<essid cloaked="false">GTvisitor</essid>
+		</SSID>
+		<BSSID>1C:17:D3:33:1A:77</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 3</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>3</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>3</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-86</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-86</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-86</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-86</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-86</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="14" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:01 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>2</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WEP </encryption>
+			<essid cloaked="false">GTwireless</essid>
+		</SSID>
+		<BSSID>00:15:C7:AA:D1:A1</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>1</channel>
+		<freqmhz>2412 2</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>2</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>2</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-85</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-85</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-85</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-85</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-85</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+	<wireless-network number="15" type="infrastructure" first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:02 2012">
+		<SSID first-time="Sun Feb 26 12:17:01 2012" last-time="Sun Feb 26 12:17:02 2012">
+			<type>Beacon</type>
+			<max-rate>54.000000</max-rate>
+			<packets>2</packets>
+			<beaconrate>10</beaconrate>
+			<encryption>WEP </encryption>
+			<essid cloaked="false">GTwireless</essid>
+		</SSID>
+		<BSSID>9C:4E:20:C9:46:B1</BSSID>
+		<manuf>Cisco Systems</manuf>
+		<channel>6</channel>
+		<freqmhz>2437 2</freqmhz>
+		<maxseenrate>54000</maxseenrate>
+		<packets>
+			<LLC>2</LLC>
+			<data>0</data>
+			<crypt>0</crypt>
+			<total>2</total>
+			<fragments>0</fragments>
+			<retries>0</retries>
+		</packets>
+		<datasize>0</datasize>
+		<snr-info>
+			<last_signal_dbm>-68</last_signal_dbm>
+			<last_noise_dbm>0</last_noise_dbm>
+			<last_signal_rssi>-68</last_signal_rssi>
+			<last_noise_rssi>0</last_noise_rssi>
+			<min_signal_dbm>-68</min_signal_dbm>
+			<min_noise_dbm>0</min_noise_dbm>
+			<min_signal_rssi>1024</min_signal_rssi>
+			<min_noise_rssi>1024</min_noise_rssi>
+			<max_signal_dbm>-68</max_signal_dbm>
+			<max_noise_dbm>0</max_noise_dbm>
+			<max_signal_rssi>-68</max_signal_rssi>
+			<max_noise_rssi>0</max_noise_rssi>
+		</snr-info>
+		<bsstimestamp>0</bsstimestamp>
+		<cdp-device></cdp-device>
+		<cdp-portid></cdp-portid>
+	</wireless-network>
+</detection-run>
