@@ -92,8 +92,9 @@ def rewrite_input_files(path):
         # Strip extra spaces from each field and append to beacon_lines
         beacon_lines.append([field.strip() for field in row])
     elif filename.endswith('.csv'):
+
       # Read the file into a list first so that invalid SSIDs can be handled
-      infile = open(os.path.join(path, filename), 'r')
+      infile = open(os.path.join(path, filename), 'rb')
       inlines = []
 
       for i,line in enumerate(infile):
@@ -105,7 +106,7 @@ def rewrite_input_files(path):
             # Second blank line happens after the initial summary block.
             # The rest of the file is of no concern.
             break
-        new_line = ''.join([ch for ch in line if ch.isprintable()])
+        new_line = ''.join([chr(ch) for ch in line if chr(ch).isprintable()])
         inlines.append(new_line)
       infile.close()
       
