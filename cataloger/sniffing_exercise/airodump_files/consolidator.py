@@ -59,6 +59,7 @@ def rewrite_input_files(path):
   """
 
   all_files = os.listdir(path)
+  all_files = [file for file in all_files if file[0] != '.']
   if len(all_files) > 2:
     print("Too many files found.  Feature required.")
     sys.exit(1)
@@ -84,6 +85,10 @@ def rewrite_input_files(path):
       # Parse the CSV data; Strip extra spaces from the data.
       beacon_reader = csv.reader(inlines)
       for row in beacon_reader:
+        # Skip short lines
+        if len(row) < 3:
+          continue
+
         # Strip extra spaces from each field and append to beacon_lines
         beacon_lines.append([field.strip() for field in row])
     elif filename.endswith('.csv'):
