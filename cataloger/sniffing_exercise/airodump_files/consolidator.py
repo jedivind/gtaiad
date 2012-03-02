@@ -1,4 +1,8 @@
-import argparse
+try:
+  import argparse
+except (ImportError):
+  import argparse32 as argparse
+
 import csv
 import sys
 import os
