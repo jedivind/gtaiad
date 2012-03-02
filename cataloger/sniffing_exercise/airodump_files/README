@@ -1,3 +1,17 @@
 The consolidator.py script requires Python 3.  The command could be:
     python3
     python3.2
+
+Data processing procedure:
+(1) run consodidator.py and field_rm.py and get a big raw data file, say pk_data.csv. Use grep to filter out nonGT or "-1"
+    grep GT pk_data.csv > pk_data_GT.csv
+(2) Use the following command to exact <location, Mac Address, Signal Strength> from the above raw file
+    csvtool col 2,3,5 pk_data_GT.csv -o pk_sub.csv 
+(3) run median.cpp to compute median and store it as the fingerprint data file, say pk_sub_median.csv
+(4) parse.cpp will load the **_median file and has a distance function in it. 
+
+
+
+
+
+
