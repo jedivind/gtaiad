@@ -28,6 +28,7 @@ void printLoc(const map<string, map<string, int> > & fingerprint, string locatio
 }
 
 //Given the fingerprints for two location, compute the Euclidean distance
+//  location_fingerprint = map< MAC_ADDRESS, MEDIAN_SIGNAL_STRENGTH >
 double distanceFing(const map<string, int> & fing1, const map<string, int> & fing2)
 {
 	int res = 0;
