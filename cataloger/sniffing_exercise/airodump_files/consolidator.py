@@ -17,7 +17,7 @@ BEACONS_BSSID = 0
 BEACONS_ESSID = 6
 BEACONS_ESSID_LENGTH = 5
 
-# This file works with Python 2.7 and Python 3
+# This file works with Python 2.7 and Python 3.2
 
 USAGE_EPILOG = """\
 Examples:
