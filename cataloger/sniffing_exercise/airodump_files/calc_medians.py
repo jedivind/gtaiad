@@ -43,7 +43,7 @@ def main():
       continue
 
     bssid = fields['BSSID']
-    capture_location = fields['capture_location']
+    capture_location = fields['capture_location'].upper()
     channel = int(fields['channel'])
     essid = fields['ESSID'][:int(fields['essid_length'])]
 
