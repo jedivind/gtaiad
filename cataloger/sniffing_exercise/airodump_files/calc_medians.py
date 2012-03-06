@@ -72,7 +72,9 @@ def main():
         all_powers = sorted([int(fields['power']) for fields in beacons])
         median_power = all_powers[len(all_powers)/2]
         output_fields.append([location, channel, bssid, median_power, essid, len(all_powers)])
-      writer.writerows(sorted(output_fields, key=lambda x: x[3], reverse=True))
+      # Group by location,channel sort by power
+      #writer.writerows(sorted(output_fields, key=lambda x: x[3], reverse=True))
+      writer.writerows(output_fields)
 
 if __name__=='__main__':
   try:
