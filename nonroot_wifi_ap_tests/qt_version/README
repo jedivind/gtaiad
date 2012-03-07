@@ -1,0 +1,4 @@
+This is not yet working.  At best it dumps out available network connections.
+At worse it dumps out just the active one.
+
+Run `qmake` to create the Makefile
