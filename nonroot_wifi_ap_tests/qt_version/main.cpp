@@ -6,7 +6,7 @@
 #include <QList>
 
 // Mobility stuff
-//#include <QSystemNetworkInfo>
+#include <QSystemNetworkInfo>
 
 int main(int argc, char* argv[])
 {
@@ -28,8 +28,7 @@ int main(int argc, char* argv[])
   while (i.hasNext())
   {
     qDebug() << "----";
-    qDebug() << "Name: " << active_configs.at(0).name();
-    i.next();
+    qDebug() << "Name: " << i.next().name();
   }
 
 
