@@ -6,7 +6,7 @@
 #include <QList>
 
 // Mobility stuff
-#include <QSystemNetworkInfo>
+//#include <QSystemNetworkInfo>
 
 int main(int argc, char* argv[])
 {
@@ -24,11 +24,17 @@ int main(int argc, char* argv[])
 
   // see: http://doc.qt.nokia.com/qtmobility-1.0-tp/bearer-management.html#bearer-cloud-example
   qDebug() << "Network Configurations: " << active_configs.count();
+  QNetworkConfigurationManager wireless_connection;
 
   while (i.hasNext())
   {
+    QNetworkConfiguration conn;
+
+    conn = i.next();
     qDebug() << "----";
-    qDebug() << "Name: " << i.next().name();
+    qDebug() << "Name: " << conn.name();
+    qDebug() << "BearerType: " << conn.bearerType();
+    qDebug() << "BearerTypeName: " << conn.bearerTypeName();
   }
 
 
