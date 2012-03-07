@@ -6313,7 +6313,7 @@ usage:
 
                     memset(buffer, 0, sizeof(buffer));
                     h80211 = buffer;
-                    if ((caplen = wi_read(wi[i], h80210, sizeof(buffer), &ri)) == -1) {
+                    if ((caplen = wi_read(wi[i], h80211, sizeof(buffer), &ri)) == -1) {
                         wi_read_failed++;
                         if(wi_read_failed > 1)
                         {
