@@ -21,5 +21,5 @@ public slots:
 private:
   void mousePressEvent(QGraphicsSceneMouseEvent* e);
 
-  QGraphicsEllipseItem* m_fp_pending_capture_loc_ellipseitem;
+  QGraphicsEllipseItem* m_pending_capture_loc_ellipseitem;
 };

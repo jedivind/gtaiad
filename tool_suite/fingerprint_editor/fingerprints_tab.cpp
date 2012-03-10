@@ -20,24 +20,24 @@
 //
 
 // Slot called when the zoom slider position is changed
-void MainDialog::fp_update_floor_scale(int scaling_factor)
+void MainDialog::update_floor_scale(int scaling_factor)
 {
-  m_fp_map_view->resetTransform();
-  m_fp_map_view->scale(100.0/scaling_factor, 100.0/scaling_factor);
+  m_map_view->resetTransform();
+  m_map_view->scale(100.0/scaling_factor, 100.0/scaling_factor);
 }
 
 // Slot called when the user hits the 'New Capture' button.
-void MainDialog::fp_start_new_capture_mode(void)
+void MainDialog::start_new_capture_mode(void)
 {
-  fp_new_capture_push_button->setEnabled(false);
-  fp_new_capture_groupbox->setEnabled(true);
-  fp_new_capture_push_button->setEnabled(false);
-  fp_floor_combobox->setEnabled(false);
+  new_capture_push_button->setEnabled(false);
+  new_capture_groupbox->setEnabled(true);
+  new_capture_push_button->setEnabled(false);
+  floor_combobox->setEnabled(false);
 }
 
-bool MainDialog::fp_validate_loc_id(void)
+bool MainDialog::validate_loc_id(void)
 {
-  QString loc_id = fp_loc_id_line_edit->displayText();
+  QString loc_id = loc_id_line_edit->displayText();
 
   if (loc_id.isEmpty())
   {
@@ -49,22 +49,22 @@ bool MainDialog::fp_validate_loc_id(void)
   else
   {
     // Convert entered text to uppercase
-    fp_loc_id_line_edit->setText(loc_id.toUpper().trimmed());
+    loc_id_line_edit->setText(loc_id.toUpper().trimmed());
   }
 
   return true;
 }
 
-void MainDialog::fp_perform_ap_capture(void)
+void MainDialog::perform_ap_capture(void)
 {
-  if (fp_x_pos_label->text().isEmpty() || fp_y_pos_label->text().isEmpty())
+  if (x_pos_label->text().isEmpty() || y_pos_label->text().isEmpty())
   {
     QMessageBox::warning(this, "Invalid Capture Location",
         "No capture location has been identified on the map.");
     return;
   }
 
-  if (!fp_validate_loc_id())
+  if (!validate_loc_id())
   {
     return;
   }
@@ -73,9 +73,9 @@ void MainDialog::fp_perform_ap_capture(void)
   // TODO: perform Database magic
 }
 
-void MainDialog::fp_insert_loc_id(void)
+void MainDialog::insert_loc_id(void)
 {
-  if (!fp_validate_loc_id())
+  if (!validate_loc_id())
   {
     return;
   }
@@ -89,13 +89,13 @@ void MainDialog::fp_insert_loc_id(void)
       VALUES (:capture_location_name, :capture_location_floor, \
               :capture_location_x_pos, :capture_location_y_pos)");
 
-  QPoint new_capture_location(fp_x_pos_label->text().toInt(),
-                              fp_y_pos_label->text().toInt());
+  QPoint new_capture_location(x_pos_label->text().toInt(),
+                              y_pos_label->text().toInt());
 
-  q.bindValue(":capture_location_name", fp_loc_id_line_edit->displayText());
-  q.bindValue(":capture_location_floor", fp_floor_combobox->currentIndex() + 1);
-  q.bindValue(":capture_location_x_pos", fp_x_pos_label->text().toInt());
-  q.bindValue(":capture_location_y_pos", fp_y_pos_label->text().toInt());
+  q.bindValue(":capture_location_name", loc_id_line_edit->displayText());
+  q.bindValue(":capture_location_floor", floor_combobox->currentIndex() + 1);
+  q.bindValue(":capture_location_x_pos", x_pos_label->text().toInt());
+  q.bindValue(":capture_location_y_pos", y_pos_label->text().toInt());
 
   bool res = q.exec();
 
@@ -106,41 +106,41 @@ void MainDialog::fp_insert_loc_id(void)
     return;
   }
 
-  emit fp_new_capture_added(new_capture_location);
+  emit new_capture_added(new_capture_location);
 
   // TODO: exit capture mode
 
-  fp_cancel_new_capture();
-  fp_loc_id_line_edit->clear();
+  cancel_new_capture();
+  loc_id_line_edit->clear();
 }
 
 // slot: called when user clicks on the floor map for red dot placement
-void MainDialog::fp_update_capture_location(const QPointF& pos)
+void MainDialog::update_capture_location(const QPointF& pos)
 {
   // Ignore the update request when the new_capture_groupbox
   // is not enabled.
   // TODO: Update enables of buttons when loc ID is entered
-  if (!fp_new_capture_groupbox->isEnabled())
+  if (!new_capture_groupbox->isEnabled())
   {
     // Poor design--not really canceled, but gets rid of the dot all the same
-    emit fp_new_capture_canceled();
+    emit new_capture_canceled();
     return;
   }
 
   QPoint int_pos = pos.toPoint();  // does proper rounding
 
-  fp_x_pos_label->setText(QString::number(int_pos.x()));
-  fp_y_pos_label->setText(QString::number(int_pos.y()));
+  x_pos_label->setText(QString::number(int_pos.x()));
+  y_pos_label->setText(QString::number(int_pos.y()));
 }
 
 // Do necessary clearing of widgets and enable/disables
-void MainDialog::fp_cancel_new_capture(void)
+void MainDialog::cancel_new_capture(void)
 {
-  fp_x_pos_label->clear();
-  fp_y_pos_label->clear();
-  fp_new_capture_groupbox->setEnabled(false);
-  fp_new_capture_push_button->setEnabled(true);
-  fp_floor_combobox->setEnabled(true);
+  x_pos_label->clear();
+  y_pos_label->clear();
+  new_capture_groupbox->setEnabled(false);
+  new_capture_push_button->setEnabled(true);
+  floor_combobox->setEnabled(true);
 
-  emit fp_new_capture_canceled();
+  emit new_capture_canceled();
 }
