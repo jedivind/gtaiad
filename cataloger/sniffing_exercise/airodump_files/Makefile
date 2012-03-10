@@ -1,7 +1,7 @@
 CC = g++
 RM = /bin/rm -rf
 
-all: parse median 
+all: parse median compareDiffDate macIndex 
 
 %.o: %.cpp
 	$(CC) -c $< -o $@

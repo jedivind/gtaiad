@@ -9,6 +9,9 @@
 
 using namespace std;
 
+const int MedianInterval = 20;
+const int FrequencyRatioCutOff = 5;
+
 /*
  * This function is intended to take a raw huge file, consolidate rows with same 
  * <location, Mac Address> field and compute the median. Save the output file as 
@@ -27,8 +30,8 @@ int main(int argc, const char * argv[])
 	
 	string line;
 	//for each <location, MacAdd>, store all the signal strength in a vector
-	map<pair<string, string>, vector<int> > locMacSig; 
-	map<pair<string, string>, vector<int> >::iterator locMacSig_It;
+	map<string, map<string, vector<int> > > locMacSig; 
+	map<string, map<string, vector<int> > >::iterator locMacSig_It;
 	
 	//store all the rows in ifm in a LocMacSig map structure
 	while(getline(ifm, line)){
@@ -41,21 +44,43 @@ int main(int argc, const char * argv[])
 		getline(lineStream, macAdd, ',');
 		getline(lineStream, temp);
 		sigStr = atoi(temp.c_str());
-		pair<string, string> cur(location, macAdd);
-		locMacSig[cur].push_back(sigStr);
+		locMacSig[location][macAdd].push_back(sigStr);
 	}
+
+	vector<int> medianVec, frequencyVec;
 
 	locMacSig_It = locMacSig.begin();
 	for(; locMacSig_It != locMacSig.end(); locMacSig_It++){
-		vector<int> & sigVec = locMacSig_It->second;
-		sort(sigVec.begin(), sigVec.end()); //sort the vector in order to compute median
-		const pair<string, string> & locmac = locMacSig_It->first;
-		int median = *(sigVec.begin() + sigVec.size()/2);
-		ofm << locmac.first << ',';
-		ofm << locmac.second << ',';
-		ofm << median << endl;
-		
+		//Now inside the loop, it's for a single location
+		map<string, vector<int> > & macSig = locMacSig_It -> second;
+		map<string, vector<int> >::iterator macSig_It;
+		medianVec.clear();
+		frequencyVec.clear();
+
+		for(macSig_It = macSig.begin(); macSig_It != macSig.end(); macSig_It ++){
+			vector<int> & sigVec = macSig_It->second;
+			sort(sigVec.begin(), sigVec.end()); //sort the vector in order to compute median
+			int median = *(sigVec.begin() + sigVec.size()/2);
+			medianVec.push_back(median);
+			frequencyVec.push_back(sigVec.size());
+		}
+		sort(medianVec.begin(), medianVec.end());
+		sort(frequencyVec.begin(), frequencyVec.end());
+ 		int medianCutOff = medianVec.back()-MedianInterval;
+		int frequencyCutOff = frequencyVec.back()/FrequencyRatioCutOff;
+
+		for(macSig_It = macSig.begin(); macSig_It != macSig.end(); macSig_It ++){
+			vector<int> & sigVec = macSig_It->second;
+			int median = *(sigVec.begin() + sigVec.size()/2);
+			if(median >= medianCutOff && sigVec.size() >= frequencyCutOff){
+				ofm << locMacSig_It->first << ','
+			    	<< macSig_It->first << ','
+			    	<< median << endl;
+			}
+		}	
+	
 	}
+	
 
 	ifm.close();
 	ofm.close();
