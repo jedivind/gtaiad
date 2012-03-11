@@ -16,12 +16,12 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
 
   assert(db.isOpen());
 
-  m_map_diagrams << "../level_one.png";
-  m_map_diagrams << "../level_two.png";
-  m_map_diagrams << "../level_three.png";
+  m_map_diagrams << "../level_one.jpg";
+  m_map_diagrams << "../level_two.jpg";
+  m_map_diagrams << "../level_three.jpg";
 
   // TODO: fixme
-  QPixmap* floor_pixmap = new QPixmap("level_one.png");
+  QPixmap* floor_pixmap = new QPixmap("../level_one.jpg");
 
   setupUi(this);
 
