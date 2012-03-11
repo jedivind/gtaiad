@@ -383,6 +383,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>floor_combobox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>change_floor(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>596</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>update_floor_scale(int)</slot>
@@ -390,5 +406,6 @@
   <slot>run_airodump_clicked()</slot>
   <slot>exit_capture_mode()</slot>
   <slot>insert_location_id_clicked()</slot>
+  <slot>change_floor(int)</slot>
  </slots>
 </ui>

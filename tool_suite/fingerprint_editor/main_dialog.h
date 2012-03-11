@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 
 #include "ui_main_dialog.h"
+#include "map_scene.h"
 
 class MainDialog : public QDialog, public Ui::MainDialog
 {
@@ -23,6 +24,7 @@ public slots:
   void run_airodump_clicked(void);
   void update_capture_location(const QPointF& pos);
   void insert_location_id_clicked(void);
+  void change_floor(int image_index);
 
 signals:
   void new_capture_canceled(void);
@@ -30,9 +32,11 @@ signals:
 
 private:
   bool validate_loc_id(void);
+  void init_floor_scenes(void);
 
   const QSqlDatabase& m_db;
-  QStringList m_map_diagrams;
+  QStringList m_floor_image_filenames;
+  QList<MapScene*> m_map_scenes;
 };
 
 #endif

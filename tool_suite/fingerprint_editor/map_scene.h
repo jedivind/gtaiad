@@ -1,3 +1,6 @@
+#ifndef MAP_SCENE_H
+#define MAP_SCENE_H
+
 #include <QWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QPointF>
@@ -23,3 +26,5 @@ private:
 
   QGraphicsEllipseItem* m_pending_capture_loc_ellipseitem;
 };
+
+#endif

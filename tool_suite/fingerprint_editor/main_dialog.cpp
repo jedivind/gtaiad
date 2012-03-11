@@ -10,32 +10,27 @@
 #include "map_scene.h"
 
 MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent),
-    m_db(db), m_map_diagrams(QStringList())
+    m_db(db), m_floor_image_filenames(QStringList())
 {
   MapScene* map_scene = new MapScene;
 
   assert(db.isOpen());
 
-  m_map_diagrams << "../level_one.jpg";
-  m_map_diagrams << "../level_two.jpg";
-  m_map_diagrams << "../level_three.jpg";
-
-  // TODO: fixme
-  QPixmap* floor_pixmap = new QPixmap("../level_one.jpg");
-
   setupUi(this);
 
-  map_scene->addPixmap(*floor_pixmap);
+  m_floor_image_filenames << "../level_one.jpg";
+  m_floor_image_filenames << "../level_two.jpg";
+  m_floor_image_filenames << "../level_three.jpg";
 
-  map_view->setScene(map_scene);
+  init_floor_scenes();
+
+  change_floor(0);
 
   update_floor_scale(zoom_slider->value());
 
 #ifdef Q_WS_MAC
   map_view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #endif
-
-  map_view->setFocus();
 
   // Remove dialog example data
   loc_id_line_edit->clear();
@@ -190,4 +185,29 @@ void MainDialog::exit_capture_mode(void)
   floor_combobox->setEnabled(true);
 
   emit new_capture_canceled();
+}
+
+// Generate the MapScene object for each floor map.  Store the scenes in
+// the QList<T> generic container.
+void MainDialog::init_floor_scenes(void)
+{
+  // assumed order is 1, 2, 3
+  foreach (const QString& filename, m_floor_image_filenames)
+  {
+    MapScene* map_scene = new MapScene;
+    QPixmap floor_pixmap(filename);
+    map_scene->addPixmap(floor_pixmap);
+
+    m_map_scenes.append(map_scene);
+  }
+}
+
+// slot: called when floor dropdown is changed
+void MainDialog::change_floor(int image_index)
+{
+  MapScene* map_scene = m_map_scenes.at(image_index);
+  map_view->setScene(map_scene);
+
+  // Change focus to any place other than the QComboBox
+  map_view->setFocus();
 }
