@@ -20,7 +20,6 @@ SOURCES = \
   main.cpp \
   main_dialog.cpp \
   map_scene.cpp \
-  fingerprints_tab.cpp \
   assets_tab.cpp
 
 FORMS = \

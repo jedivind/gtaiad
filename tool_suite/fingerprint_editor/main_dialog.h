@@ -18,11 +18,11 @@ public:
 
 public slots:
   void update_floor_scale(int scaling_factor);   // Set scale to 1/scaling_factor
-  void start_new_capture_mode(void);
-  void perform_ap_capture(void);
+  void enter_capture_mode(void);
+  void exit_capture_mode(void);
+  void run_airodump_clicked(void);
   void update_capture_location(const QPointF& pos);
-  void cancel_new_capture(void);
-  void insert_loc_id(void);
+  void insert_location_id_clicked(void);
 
 signals:
   void new_capture_canceled(void);
@@ -33,8 +33,6 @@ private:
 
   const QSqlDatabase& m_db;
   QStringList m_map_diagrams;
-  QGraphicsView* m_map_view;
-  QGraphicsView* m_map_view_2;
 };
 
 #endif

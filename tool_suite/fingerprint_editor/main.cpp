@@ -8,7 +8,7 @@
 
 #include "main_dialog.h"
 
-#define DB_FILENAME "me.db"
+#define DB_FILENAME "klaus.db"
 
 int main(int argc, char* argv[])
 {
