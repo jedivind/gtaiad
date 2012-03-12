@@ -5,6 +5,8 @@
 #include <QPixmap>
 #include <QPointF>
 #include <QSqlQuery>
+#include <QBitmap>
+#include <QGraphicsPixmapItem>
 
 #include "main_dialog.h"
 #include "map_scene.h"
@@ -36,19 +38,6 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
   y_pos_label->clear();
 
 }
-
-// TODO: Multi-modal thoughts
-//        enter_capture_mode
-//            - can add new locations
-//            - can leave capture mode
-//            - can place capture locations on map
-//        exit_capture_mode
-//            - can enter capture mode
-//            - can select existing capture
-//            - can select existing capture and delete it
-//            - can change floor
-//            - can select existing capture and redo it
-//
 
 // Slot called when the zoom slider position is changed
 void MainDialog::update_floor_scale(int scaling_factor)
@@ -147,7 +136,7 @@ void MainDialog::capture_location_changed(const QPointF& pos)
     MapScene* map_scene;
 
     map_scene = static_cast<MapScene*>(map_view->scene());
-    map_scene->clear_marker_placement();
+    map_scene->clear_temp_marker();
     return;
   }
 
@@ -183,24 +172,39 @@ void MainDialog::exit_capture_mode(void)
 // the QList<T> generic container.
 void MainDialog::init_floor_scenes(void)
 {
+  int floor_number = 0;
+
   // assumed order is 1, 2, 3
   foreach (const QString& filename, m_floor_image_filenames)
   {
-    MapScene* map_scene = new MapScene;
-    QPixmap floor_pixmap(filename);
-    map_scene->addPixmap(floor_pixmap);
+    MapScene* map_scene = new MapScene(filename);
+    QList< QPair<QString, QPointF> > measurement_locations;
+    floor_number++;
+
+    if (floor_number == 1) map_scene->set_marker_color(Qt::blue);
+    else if (floor_number == 2) map_scene->set_marker_color(Qt::cyan);
+    else map_scene->set_marker_color(Qt::darkGreen);
 
     m_map_scenes.append(map_scene);
+
+    measurement_locations = get_measurement_locations(floor_number);
+    QListIterator< QPair<QString, QPointF> > itr(measurement_locations);
+    while (itr.hasNext())
+    {
+      QPair<QString, QPointF> measurement_location = itr.next();
+
+      map_scene->add_marker(measurement_location.first, measurement_location.second);
+    }
 
     // Connect signals of MapScene
     QObject::connect(map_scene, SIGNAL(location_set(const QPointF&)),
         this, SLOT(capture_location_changed(const QPointF&)));
 
     QObject::connect(this, SIGNAL(new_capture_canceled()),
-        map_scene, SLOT(clear_marker_placement()));
+        map_scene, SLOT(clear_temp_marker()));
 
     QObject::connect(this, SIGNAL(new_capture_added(const QPoint&)),
-        map_scene, SLOT(clear_marker_placement()));
+        map_scene, SLOT(clear_temp_marker()));
   }
 }
 
@@ -212,4 +216,40 @@ void MainDialog::change_floor(int image_index)
 
   // Change focus to any place other than the QComboBox
   map_view->setFocus();
+}
+
+// read from the database all of a floor's loc_ids and xpos,ypos information
+QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations(int floor_number)
+{
+  QSqlQuery q(m_db);
+  QList< QPair<QString, QPointF> > rvalue;
+
+  q.prepare(" \
+      SELECT \
+        capture_location_name, capture_location_x_pos, capture_location_y_pos \
+      FROM capture_locations \
+      WHERE capture_location_floor = :capture_location_floor");
+
+  q.bindValue(":capture_location_floor", floor_number);
+
+  bool res = q.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_locations table.");
+    return rvalue;
+  }
+
+  while (q.next())
+  {
+    QPair<QString, QPointF> tuple;
+
+    tuple.first = q.value(0).toString();
+    tuple.second = QPointF(q.value(1).toFloat(), q.value(2).toFloat());
+
+    rvalue.append(tuple);
+  }
+
+  return rvalue;
 }

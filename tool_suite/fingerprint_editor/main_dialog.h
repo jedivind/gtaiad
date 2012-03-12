@@ -6,6 +6,8 @@
 #include <QPointF>
 #include <QStringList>
 #include <QSqlDatabase>
+#include <QPair>
+#include <QList>
 
 #include "ui_main_dialog.h"
 #include "map_scene.h"
@@ -33,6 +35,7 @@ signals:
 private:
   bool validate_loc_id(void);
   void init_floor_scenes(void);
+  QList< QPair<QString, QPointF> > get_measurement_locations(int floor_number);
 
   const QSqlDatabase& m_db;
   QStringList m_floor_image_filenames;
