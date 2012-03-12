@@ -37,15 +37,6 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
   x_pos_label->clear();
   y_pos_label->clear();
 
-  // Connect signals of MapScene
-  QObject::connect(map_scene, SIGNAL(location_set(const QPointF&)),
-      this, SLOT(update_capture_location(const QPointF)));
-
-  QObject::connect(this, SIGNAL(new_capture_canceled()),
-      map_scene, SLOT(clear_marker_placement()));
-
-  QObject::connect(this, SIGNAL(new_capture_added(const QPoint&)),
-      map_scene, SLOT(clear_marker_placement()));
 }
 
 // TODO: Multi-modal thoughts
@@ -66,15 +57,6 @@ void MainDialog::update_floor_scale(int scaling_factor)
 {
   map_view->resetTransform();
   map_view->scale(100.0/scaling_factor, 100.0/scaling_factor);
-}
-
-// Slot called when the user hits the 'New Capture' button.
-void MainDialog::enter_capture_mode(void)
-{
-  new_capture_push_button->setEnabled(false);
-  new_capture_groupbox->setEnabled(true);
-  new_capture_push_button->setEnabled(false);
-  floor_combobox->setEnabled(false);
 }
 
 bool MainDialog::validate_loc_id(void)
@@ -113,6 +95,8 @@ void MainDialog::run_airodump_clicked(void)
 
   // TODO: perform AP capture magic
   // TODO: perform Database magic
+
+  //emit new_capture_added(new_capture_location);
 }
 
 void MainDialog::insert_location_id_clicked(void)
@@ -150,22 +134,22 @@ void MainDialog::insert_location_id_clicked(void)
 
   emit new_capture_added(new_capture_location);
 
-  // TODO: exit capture mode
-
   exit_capture_mode();
   loc_id_line_edit->clear();
 }
 
 // slot: called when user clicks on the floor map for red dot placement
-void MainDialog::update_capture_location(const QPointF& pos)
+void MainDialog::capture_location_changed(const QPointF& pos)
 {
   // Ignore the update request when the new_capture_groupbox
   // is not enabled.
   // TODO: Update enables of buttons when loc ID is entered
   if (!new_capture_groupbox->isEnabled())
   {
-    // Poor design--not really canceled, but gets rid of the dot all the same
-    emit new_capture_canceled();
+    MapScene* map_scene;
+
+    map_scene = (MapScene*)(map_view->scene());
+    map_scene->clear_marker_placement();
     return;
   }
 
@@ -173,6 +157,15 @@ void MainDialog::update_capture_location(const QPointF& pos)
 
   x_pos_label->setText(QString::number(int_pos.x()));
   y_pos_label->setText(QString::number(int_pos.y()));
+}
+
+// Slot called when the user hits the 'New Capture' button.
+void MainDialog::enter_capture_mode(void)
+{
+  new_capture_push_button->setEnabled(false);
+  new_capture_groupbox->setEnabled(true);
+  new_capture_push_button->setEnabled(false);
+  floor_combobox->setEnabled(false);
 }
 
 // Do necessary clearing of widgets and enable/disables
@@ -199,6 +192,16 @@ void MainDialog::init_floor_scenes(void)
     map_scene->addPixmap(floor_pixmap);
 
     m_map_scenes.append(map_scene);
+
+    // Connect signals of MapScene
+    QObject::connect(map_scene, SIGNAL(location_set(const QPointF&)),
+        this, SLOT(capture_location_changed(const QPointF&)));
+
+    QObject::connect(this, SIGNAL(new_capture_canceled()),
+        map_scene, SLOT(clear_marker_placement()));
+
+    QObject::connect(this, SIGNAL(new_capture_added(const QPoint&)),
+        map_scene, SLOT(clear_marker_placement()));
   }
 }
 

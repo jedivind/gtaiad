@@ -22,7 +22,7 @@ public slots:
   void enter_capture_mode(void);
   void exit_capture_mode(void);
   void run_airodump_clicked(void);
-  void update_capture_location(const QPointF& pos);
+  void capture_location_changed(const QPointF& pos);
   void insert_location_id_clicked(void);
   void change_floor(int image_index);
 
