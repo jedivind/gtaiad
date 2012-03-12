@@ -12,8 +12,6 @@
 MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent),
     m_db(db), m_floor_image_filenames(QStringList())
 {
-  MapScene* map_scene = new MapScene;
-
   assert(db.isOpen());
 
   setupUi(this);
@@ -148,7 +146,7 @@ void MainDialog::capture_location_changed(const QPointF& pos)
   {
     MapScene* map_scene;
 
-    map_scene = (MapScene*)(map_view->scene());
+    map_scene = static_cast<MapScene*>(map_view->scene());
     map_scene->clear_marker_placement();
     return;
   }
@@ -166,6 +164,7 @@ void MainDialog::enter_capture_mode(void)
   new_capture_groupbox->setEnabled(true);
   new_capture_push_button->setEnabled(false);
   floor_combobox->setEnabled(false);
+  loc_id_line_edit->setFocus();
 }
 
 // Do necessary clearing of widgets and enable/disables

@@ -23,7 +23,7 @@ void MapScene::clear_marker_placement(void)
 void MapScene::place_marker(const QPointF& pos, const QColor& color)
 {
   int i_diameter = qFloor(qSqrt(((int(this->height()) << 1) + (int(this->width()) << 1))) + 0.5);
-  float diameter = i_diameter / 8;
+  float diameter = i_diameter / 11;
 
   if (m_pending_capture_loc_ellipseitem)
   {
