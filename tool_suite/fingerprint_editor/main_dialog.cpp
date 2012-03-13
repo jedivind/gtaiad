@@ -7,12 +7,14 @@
 #include <QSqlQuery>
 #include <QBitmap>
 #include <QGraphicsPixmapItem>
+#include <QTableWidgetItem>
+#include <QTimer>
 
 #include "main_dialog.h"
 #include "map_scene.h"
 
 MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent),
-    m_db(db), m_floor_image_filenames(QStringList())
+    m_db(db), m_floor_image_filenames(), all_measurement_locations(), table_signal_filter_kludge(0)
 {
   assert(db.isOpen());
 
@@ -36,7 +38,6 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
   loc_id_line_edit->clear();
   x_pos_label->clear();
   y_pos_label->clear();
-
 }
 
 // Slot called when the zoom slider position is changed
@@ -195,6 +196,7 @@ void MainDialog::init_floor_scenes(void)
 
       map_scene->add_marker(measurement_location.first, measurement_location.second);
     }
+    all_measurement_locations.append(measurement_locations);
 
     // Connect signals of MapScene
     QObject::connect(map_scene, SIGNAL(temp_marker_set(const QPointF&)),
@@ -207,7 +209,12 @@ void MainDialog::init_floor_scenes(void)
         map_scene, SLOT(clear_temp_marker()));
 
     QObject::connect(map_scene, SIGNAL(location_selected(const QString&)),
-        this, SLOT(fingerprint_location_selected(const QString&)));
+        this, SLOT(fingerprint_location_dot_selected(const QString&)));
+
+    // Each TableWidgetItem causes a signal.  So extra slot calls must
+    // be filtered.
+    QObject::connect(locations_table, SIGNAL(currentCellChanged(int, int, int, int)),
+        this, SLOT(fingerprint_location_row_changed(int, int, int, int)));
   }
 }
 
@@ -219,6 +226,36 @@ void MainDialog::change_floor(int image_index)
 
   // Change focus to any place other than the QComboBox
   map_view->setFocus();
+
+  // Clear and populate the locations table
+  locations_table->clearContents();
+  QList< QPair<QString, QPointF> > measurement_locations = all_measurement_locations.at(image_index);
+  QListIterator< QPair<QString, QPointF> > itr(measurement_locations);
+  locations_table->setRowCount(measurement_locations.size());
+  int row_idx = 0;
+  while (itr.hasNext())
+  {
+    QPair<QString, QPointF> measurement_location = itr.next();
+
+    QTableWidgetItem* loc_id_col = new QTableWidgetItem(measurement_location.first);
+    QTableWidgetItem* x_pos_col = new QTableWidgetItem(
+        QString::number(measurement_location.second.x()));
+    QTableWidgetItem* y_pos_col = new QTableWidgetItem(
+        QString::number(measurement_location.second.y()));
+
+    loc_id_col->setFlags(Qt::ItemIsSelectable);
+    x_pos_col->setFlags(Qt::ItemIsSelectable);
+    y_pos_col->setFlags(Qt::ItemIsSelectable);
+
+    locations_table->setItem(row_idx, 0, loc_id_col);
+    locations_table->setItem(row_idx, 1, x_pos_col);
+    locations_table->setItem(row_idx, 2, y_pos_col);
+
+    row_idx++;
+  }
+
+  locations_table->sortByColumn(0, Qt::AscendingOrder);
+  locations_table->resizeColumnsToContents();
 }
 
 // read from the database all of a floor's loc_ids and xpos,ypos information
@@ -258,7 +295,115 @@ QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations(int floor
 }
 
 // slot to be called when user clicks on a fingerprint dot
-void MainDialog::fingerprint_location_selected(const QString& loc_id)
+void MainDialog::fingerprint_location_dot_selected(const QString& loc_id)
 {
+  // TODO
   qDebug() << "Update table for" << loc_id;
+}
+
+// The implementation of the QTableWidget forces this irritating solution.
+// Changing the row selection generates very few usable signals.  The one
+// I chose, currentCellChanged, is triggered once for each column.  Rather
+// than clear & populate the other table three time, use a timer to clear
+// a counter to filter the spurrious events.
+void MainDialog::reset_table_signal_filter_kludge(void)
+{
+  table_signal_filter_kludge = 0;
+}
+
+void MainDialog::fingerprint_location_row_changed(int current_row, int, int, int)
+{
+  table_signal_filter_kludge++;
+
+  if (table_signal_filter_kludge < 3)
+  {
+    return;
+  }
+
+  QTableWidgetItem* cell_item = locations_table->item(current_row, 0);
+
+  fingerprints_table->clearContents();
+
+  if (cell_item)
+  {
+    repopulate_fingerprints_table(cell_item->text());
+
+    // This is awesome!  GUI programming at its finest!
+    QTimer::singleShot(250, this, SLOT(reset_table_signal_filter_kludge()));
+  }
+}
+
+void MainDialog::repopulate_fingerprints_table(const QString& loc_id)
+{
+  QSqlQuery q(m_db);
+  QSqlQuery q_size(m_db);
+  bool res;
+
+  q_size.prepare(" \
+      SELECT COUNT(capture_fingerprint_bssid) \
+      FROM capture_fingerprints \
+      WHERE capture_location_name = :capture_location_name");
+
+  q_size.bindValue(":capture_location_name", loc_id);
+  res = q_size.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_fingerprints table. #1");
+    return;
+  }
+
+  res = q_size.first();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_fingerprints table. #2");
+    return;
+  }
+
+  int row_count = q_size.value(0).toInt();
+
+  q.prepare(" \
+      SELECT \
+        capture_fingerprint_bssid, capture_fingerprint_channel, \
+        capture_fingerprint_median_power, capture_fingerprint_ssid \
+      FROM capture_fingerprints \
+      WHERE capture_location_name = :capture_location_name");
+
+  q.bindValue(":capture_location_name", loc_id);
+  res = q.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_fingerprints table. #3");
+    return;
+  }
+
+  fingerprints_table->setRowCount(row_count);
+
+  int row_idx = 0;
+  while (q.next())
+  {
+    QTableWidgetItem* bssid_col = new QTableWidgetItem(q.value(0).toString());
+    QTableWidgetItem* channel_col = new QTableWidgetItem(q.value(1).toString());
+    QTableWidgetItem* power_col = new QTableWidgetItem(q.value(2).toString());
+    QTableWidgetItem* ssid_col = new QTableWidgetItem(q.value(3).toString());
+
+    bssid_col->setFlags(Qt::ItemIsSelectable);
+    channel_col->setFlags(Qt::ItemIsSelectable);
+    power_col->setFlags(Qt::ItemIsSelectable);
+    ssid_col->setFlags(Qt::ItemIsSelectable);
+
+    fingerprints_table->setItem(row_idx, 0, bssid_col);
+    fingerprints_table->setItem(row_idx, 1, channel_col);
+    fingerprints_table->setItem(row_idx, 2, power_col);
+    fingerprints_table->setItem(row_idx, 3, ssid_col);
+
+    row_idx++;
+  }
+
+  fingerprints_table->resizeColumnsToContents();
 }

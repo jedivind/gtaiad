@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Navigator Database Maintenance</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,0">
+  <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3,2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0">
      <item>
@@ -87,16 +87,6 @@
         <widget class="QPushButton" name="new_capture_push_button">
          <property name="text">
           <string>New Capture</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox">
-         <property name="text">
-          <string>Show all measurement locations</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -239,25 +229,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="measurements_table">
-          <column>
-           <property name="text">
-            <string>HW Addr</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>New Column</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>SSID</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
            <widget class="QPushButton" name="delete_capture_button">
@@ -293,6 +264,30 @@
            </spacer>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="fingerprints_table">
+          <column>
+           <property name="text">
+            <string>BSSID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Channel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Median Power</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>SSID</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>
