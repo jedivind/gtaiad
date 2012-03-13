@@ -27,6 +27,7 @@ public slots:
   void capture_location_changed(const QPointF& pos);
   void insert_location_id_clicked(void);
   void change_floor(int image_index);
+  void fingerprint_location_selected(const QString&);
 
 signals:
   void new_capture_canceled(void);

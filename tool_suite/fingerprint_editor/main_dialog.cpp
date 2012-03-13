@@ -197,7 +197,7 @@ void MainDialog::init_floor_scenes(void)
     }
 
     // Connect signals of MapScene
-    QObject::connect(map_scene, SIGNAL(location_set(const QPointF&)),
+    QObject::connect(map_scene, SIGNAL(temp_marker_set(const QPointF&)),
         this, SLOT(capture_location_changed(const QPointF&)));
 
     QObject::connect(this, SIGNAL(new_capture_canceled()),
@@ -205,6 +205,9 @@ void MainDialog::init_floor_scenes(void)
 
     QObject::connect(this, SIGNAL(new_capture_added(const QPoint&)),
         map_scene, SLOT(clear_temp_marker()));
+
+    QObject::connect(map_scene, SIGNAL(location_selected(const QString&)),
+        this, SLOT(fingerprint_location_selected(const QString&)));
   }
 }
 
@@ -252,4 +255,10 @@ QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations(int floor
   }
 
   return rvalue;
+}
+
+// slot to be called when user clicks on a fingerprint dot
+void MainDialog::fingerprint_location_selected(const QString& loc_id)
+{
+  qDebug() << "Update table for" << loc_id;
 }

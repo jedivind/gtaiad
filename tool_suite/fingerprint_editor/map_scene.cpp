@@ -13,6 +13,8 @@ PermanentMarker::PermanentMarker(const QRectF& rect,
   setToolTip(m_loc_id);
 }
 
+// ***************************************************************************
+
 // TODO: How to handle deconstruction?
 
 MapScene::MapScene(const QString& map_filename, QObject* parent) : QGraphicsScene(parent),
@@ -53,8 +55,23 @@ void MapScene::set_temp_marker(const QPointF& pos, const QColor& color)
 
 void MapScene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
-  set_temp_marker(e->scenePos());
-  emit location_set(e->scenePos());
+  QGraphicsItem* item;
+
+  item = itemAt(e->scenePos().x(), e->scenePos().y());
+
+  if (dynamic_cast<PermanentMarker*>(item) != NULL)
+  {
+    PermanentMarker* marker = static_cast<PermanentMarker*>(item);
+
+    emit location_selected(marker->m_loc_id);
+  }
+  else
+  {
+    // TODO: pass this to main using an emit; let main make the decision to
+    // place the marker.
+    set_temp_marker(e->scenePos());
+    emit temp_marker_set(e->scenePos());
+  }
 }
 
 void MapScene::add_marker(const QString& loc_id, const QPointF& pos)

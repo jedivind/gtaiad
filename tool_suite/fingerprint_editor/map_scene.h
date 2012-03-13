@@ -28,7 +28,8 @@ public:
   void set_marker_color(const QColor& color = Qt::black);
 
 signals:
-  void location_set(const QPointF& pos);
+  void temp_marker_set(const QPointF& pos);
+  void location_selected(const QString& loc_id);
 
 public slots:
   void set_temp_marker(const QPointF& pos, const QColor& color = Qt::red);
