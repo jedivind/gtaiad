@@ -54,7 +54,7 @@ void MainDialog::update_location_clicked(void)
   {
     //call code to run airodump and get the present location data.feed it into lily's code.
     //call lily's code and other map refreshing code.
-    
+   calculate_position_from_data(get_measurement_locations); 
     update_location_changed();
     QMessageBox::warning(this, "Location",
         "Updating for the first time.");
