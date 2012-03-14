@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>754</width>
-    <height>528</height>
+    <width>807</width>
+    <height>543</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,7 +59,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1,0">
            <item>
             <widget class="QLabel" name="label_2">
              <property name="text">
@@ -69,8 +69,21 @@
            </item>
            <item>
             <widget class="QLabel" name="label_3">
+             <property name="maximumSize">
+              <size>
+               <width>349</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
               <string>2nd floor conference room, room 2999</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="send_destination_button">
+             <property name="text">
+              <string>Send Destination</string>
              </property>
             </widget>
            </item>
@@ -163,12 +176,60 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>584</x>
-     <y>472</y>
+     <x>785</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
      <x>669</x>
      <y>534</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>update_location_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stop_navigation_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>Dialog</receiver>
+   <slot>setWindowModified(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>send_destination_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>489</x>
+     <y>507</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>271</y>
     </hint>
    </hints>
   </connection>
