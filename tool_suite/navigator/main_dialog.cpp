@@ -48,38 +48,40 @@ void MainDialog::update_floor_scale(int scaling_factor)
 }
 
 
+void MainDialog::run_airodump()
+{
+	//vinay's code.
+}
+
+
 void MainDialog::update_location_clicked(void)
 {
-  if (x_pos_label->text().isEmpty() && y_pos_label->text().isEmpty())   //what if the user presses update again. The marker is not cleared.
-  {
     //call code to run airodump and get the present location data.feed it into lily's code.
+    run_airodump();
+    //present_location_data = run_airodump();
     //call lily's code and other map refreshing code.
-   calculate_position_from_data(get_measurement_locations); 
-    update_location_changed();
+    validate_loc_id = get_measurement_locations_from_DB(present_location_data); 
+      if (!validate_loc_id())
+  	{
+    		QMessageBox::warning(this,"Update Location again");
+  	}
+
+    update_location_changed(validate_loc_id,floor_number);
     QMessageBox::warning(this, "Location",
         "Updating for the first time.");
     return;
-  }
-  else
-  {
-	//clear marker.
-    calculate_position_from_data(get_measurement_locations);
-    update_location_changed();
-    QMessageBox::warning(this, "Location",
-        "Updating for the first time.");
-    return;
-
-  }
-
-  if (!validate_loc_id())
-  {
-    return;
-  }
-
   // TODO: perform AP capture magic
   // TODO: perform Database magic
 
   //emit new_capture_added(new_capture_location);
+}
+
+void MainDialog::update_location_changed(char *loc_id,int floor_number)
+{
+	init_floor_scenes();
+	update_floor_scale(100);
+	change_floor(floor_number);
+
 }
 
 // slot: called when user clicks on the floor map for red dot placement
@@ -111,9 +113,9 @@ void MainDialog::init_floor_scenes(void)
 
 
 // slot: called when floor is changed.that is when the user clicks update_position again then refresh the floor if it has changed.
-void MainDialog::change_floor(int image_index)
+void MainDialog::change_floor(int floor_number)
 {
-  MapScene* map_scene = m_map_scenes.at(image_index);
+  MapScene* map_scene = m_map_scenes.at(floor_number); //get the floor number and change it accordingly.
   map_view->setScene(map_scene);
 
   // Change focus to any place other than the QComboBox
