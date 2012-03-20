@@ -7,6 +7,8 @@
 #include <map>
 #include <algorithm>
 #include <QPointf>
+#include <QSqlQuery>
+#include <QBitmap>
 
 using namespace std;
 
@@ -18,12 +20,47 @@ const int FrequencyRatioCutOff = 5;
  * <location, Mac Address> field and compute the median. Save the output file as 
  * the all fingerprint which can be loaded in the future. 
 */
-int calculate_positions_from_data(QList< QPair<QString, QPointF> > , QList present_capture)
+
+QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations_from_db(Qlist present_capture)
 {
-	string outfile = argv[1];
-	outfile.insert(outfile.size()-4, "_median"); //before ".csv" insert "_median" as part of file name
-	ifstream ifm(QList);
-	ofstream ofm(outfile.c_str());
+  QSqlQuery q(m_db);
+  QList< QPair<QString, QPointF> > rvalue;
+
+  q.prepare(" \
+      SELECT \
+        capture_location_name, capture_location_x_pos, capture_location_y_pos \
+      FROM capture_locations \
+      ");
+
+  //q.bindValue(":capture_location_floor", floor_number);
+
+  bool res = q.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_locations table.");
+    return rvalue;
+  }
+
+  while (q.next())
+  {
+    QPair<QString, QPointF> tuple;
+
+    tuple.first = q.value(0).toString();
+    tuple.second = QPointF(q.value(1).toFloat(), q.value(2).toFloat());
+
+    rvalue.append(tuple);
+  }
+
+  calculate_positions_from_data(rvalue,present_capture);
+}
+
+
+int calculate_positions_from_data(QList< QPair<QString, QPointF> > data, QList present_capture)
+{
+	
+	QList < QPair<Qstring,QPointF> >::iterator i;
 	
 	string line;
 	//for each <location, MacAdd>, store all the signal strength in a vector
@@ -31,17 +68,10 @@ int calculate_positions_from_data(QList< QPair<QString, QPointF> > , QList prese
 	map<string, map<string, vector<int> > >::iterator locMacSig_It;
 	
 	//store all the rows in ifm in a LocMacSig map structure
-	while(getline(ifm, line)){
-		stringstream lineStream(line);
-		string location;
-		string macAdd;
-		int sigStr;
-		string temp;
-		getline(lineStream, location, ',');
-		getline(lineStream, macAdd, ',');
-		getline(lineStream, temp);
-		sigStr = atoi(temp.c_str());
-		locMacSig[location][macAdd].push_back(sigStr);
+	for(i=data.begin() ; i!= data.end() ; ++i)
+	{
+		
+		locMacSig[location][macAdd].push_back(i);
 	}
 
 	vector<int> medianVec, frequencyVec;
@@ -79,7 +109,5 @@ int calculate_positions_from_data(QList< QPair<QString, QPointF> > , QList prese
 	}
 	
 
-	ifm.close();
-	ofm.close();
 	return 0;
 }	
