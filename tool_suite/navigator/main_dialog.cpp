@@ -81,6 +81,8 @@ void MainDialog::update_location_changed(char *loc_id,int floor_number)
 	init_floor_scenes();
 	update_floor_scale(100);
 	change_floor(floor_number);
+	MapScene *mapscene = new MapScene;
+	mapscene->add_marker(loc_id,position); //to add the marker to the position where the use is right now.
 
 }
 
