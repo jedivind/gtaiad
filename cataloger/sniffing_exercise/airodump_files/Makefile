@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -g
 RM = /bin/rm -rf
 
 all: parse median compareDiffDate macIndex 

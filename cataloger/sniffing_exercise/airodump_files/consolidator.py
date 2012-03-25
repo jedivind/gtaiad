@@ -24,13 +24,13 @@ Examples:
 
   Consolidate all .csv and .gatech.csv files in 0226-PK/02261620-PK-2K006:
 
-    python consolidator.py --new > some_data.csv
-    python consolidator.py --path 0226-PK/02261620-PK-2K006 >> some_data.csv
+    python3 consolidator.py --new > some_data.csv
+    python3 consolidator.py --path 0226-PK/02261620-PK-2K006 >> some_data.csv
 
   Consolidate all .csv and .gatech.csv files in 0226-PK:
 
-    python consolidator.py --new > all_data.csv
-    for a in `find 0226-PK/* -type d`; do python consolidator.py --path $a; done >> all_data.csv
+    python3 consolidator.py --new > all_data.csv
+    for a in `find 0226-PK/* -type d`; do python3 consolidator.py --path $a; done >> all_data.csv
 """
 
 def parse_args(argv):

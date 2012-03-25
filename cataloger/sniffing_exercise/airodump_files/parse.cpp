@@ -7,6 +7,7 @@
 #include <map>
 #include <algorithm>
 #include <cmath>
+#include <set>
 
 using namespace std;
 
@@ -138,29 +139,72 @@ bool mySigMacidCompare(const pair<int, int> & p1, const pair<int, int> & p2){
 	return p1.first > p2.first;
 }
 
-void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int maxNum){
+void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int maxNum, int maxDiff){
+	map<int, set<string> > macIdLocCluster;
 	map<string, vector<pair<int, int> > >::iterator it;
 	for(it=locSigMacid.begin(); it != locSigMacid.end(); it++){
 		vector<pair<int, int> > & v = it->second;
 		sort(v.begin(), v.end(), mySigMacidCompare);
 		cout << it->first << ",";
 		for(int i=0; i<maxNum && i<v.size(); i++)
-			cout << v[i].second << ",";
+			if(v.front().first - v[i].first <= maxDiff){
+				cout << v[i].second << ",";
+				macIdLocCluster[v[i].second].insert(it->first);
+			}
 		cout << endl;
 	}
 	
+	map<int, set<string> >::iterator it1, it2, it3;
+	for(it1 = macIdLocCluster.begin(); it1 != macIdLocCluster.end(); it1 ++){
+		for(it2 = it1, it2 ++; it2 != macIdLocCluster.end(); it2 ++){
+			for(it3 = it2, it3++; it3 != macIdLocCluster.end(); it3 ++){
+				set<string> temp, cluster;
+				set_intersection(it1->second.begin(), it1->second.end(), it2->second.begin(),
+						it2->second.end(), inserter(temp, temp.begin()));
+			 	set_intersection(temp.begin(), temp.end(), it3->second.begin(),
+						it3->second.end(), inserter(cluster, cluster.begin()));
+				if(cluster.size() > 2){
+					cout << it1->first << "," << it2->first << "," << it3->first << ",";
+					set<string>::iterator it;
+					for(it = cluster.begin(); it != cluster.end(); it ++)
+						cout << *it << ",";
+					cout << endl;
+				}
+			}
+		}
+	}
 }
+
+//Load the mac_Index.csv file (contains <mac, index>)  into a map structure 
+void LoadMacIndex(map<string, int> & macIndexMap, ifstream & in)
+{
+	string line;
+	while(getline(in, line)){
+		stringstream lineStream(line);
+		string macAdd;
+		string index;
+		getline(lineStream, macAdd, ',');
+		getline(lineStream, index);
+		macIndexMap[macAdd] = atoi(index.c_str());
+	}
+}
+
 
 int main(int argc, const char * argv[])
 {
-	if(argc != 2){
-		cout << "Usage: " << argv[0] << "some_median.csv" << endl;
+	if(argc != 3){
+		cout << "Usage: " << argv[0] << "  some_median.csv" << "  mac_index.csv "<< endl;
 		return 0;
 	}
 	ifstream data(argv[1]);
+	ifstream macIndexIn(argv[2]);
+
 	string line;
 	map<string, map<string, int> > fingerprint;
-	map<string, int> allMacAddr; //Storing the macAdd and their index
+	map<string, int> macIndexMap; //Storing the macAdd and their index
+	LoadMacIndex(macIndexMap, macIndexIn);
+	
+	//pair<int, int> stores <signal strength, mac address id>
 	map<string, vector<pair<int, int> > > locSigMacid; 
 	int index = 0;
 	//Load the fingerprint file (**_median.csv), store it in a map<string, map<string, int> > structure
@@ -169,19 +213,17 @@ int main(int argc, const char * argv[])
 		string location;
 		string macAdd;
 		string sigStrMed;
-		string temp;
 		getline(lineStream, location, ',');
 		getline(lineStream, macAdd, ',');
 		getline(lineStream, sigStrMed);
 		fingerprint[location][macAdd] = atoi(sigStrMed.c_str());
 
-		if(allMacAddr.find(macAdd) == allMacAddr.end()) allMacAddr[macAdd] = index ++;
-		pair<int, int> tempPair(atoi(sigStrMed.c_str()), allMacAddr[macAdd]);
+		if(macIndexMap.find(macAdd) == macIndexMap.end()) { cout << "No such mac address in file\n"; return 0; }
+		pair<int, int> tempPair(atoi(sigStrMed.c_str()), macIndexMap[macAdd]);
 		locSigMacid[location].push_back(tempPair);		
 	}
 	data.close();
-	clusterFingerprint(locSigMacid, 10);
-	//printFingerprint(fingerprint);
+	clusterFingerprint(locSigMacid, 10, 5);
 	return 0;
 }	
 
