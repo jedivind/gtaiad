@@ -7,8 +7,10 @@
 #include <QSqlQuery>
 #include <QBitmap>
 #include <QGraphicsPixmapItem>
+#include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QTimer>
+#include <QSqlError>
 
 #include "main_dialog.h"
 #include "map_scene.h"
@@ -115,14 +117,43 @@ void MainDialog::insert_location_id_clicked(void)
 
   if (!res)
   {
+    qDebug() << q.lastError().text();
     QMessageBox::warning(this, "Database Error",
         "Failed during insert of new capture location.");
     return;
   }
 
+  add_new_capture_point(new_capture_location);
+
   emit new_capture_added(new_capture_location);
 
   exit_capture_mode();
+}
+
+// slot: called after a new capture location has been added to the database
+void MainDialog::add_new_capture_point(const QPoint& point)
+{
+  int row_idx = locations_table->rowCount();
+  locations_table->insertRow(row_idx);
+
+  QTableWidgetItem* loc_id_col = new QTableWidgetItem(loc_id_line_edit->text());
+  QTableWidgetItem* x_pos_col = new QTableWidgetItem(
+      QString::number(point.x()));
+  QTableWidgetItem* y_pos_col = new QTableWidgetItem(
+      QString::number(point.y()));
+
+  loc_id_col->setFlags(Qt::ItemIsSelectable);
+  x_pos_col->setFlags(Qt::ItemIsSelectable);
+  y_pos_col->setFlags(Qt::ItemIsSelectable);
+
+  locations_table->setItem(row_idx, 0, loc_id_col);
+  locations_table->setItem(row_idx, 1, x_pos_col);
+  locations_table->setItem(row_idx, 2, y_pos_col);
+
+  MapScene* map_scene = static_cast<MapScene*>(map_view->scene());
+
+  map_scene->add_marker(loc_id_line_edit->text(), point);
+
   loc_id_line_edit->clear();
 }
 
@@ -227,6 +258,9 @@ void MainDialog::change_floor(int image_index)
   // Change focus to any place other than the QComboBox
   map_view->setFocus();
 
+  // Clear any highlighted point
+  map_scene->unhighlight_location();
+
   // Clear and populate the locations table
   locations_table->clearContents();
   QList< QPair<QString, QPointF> > measurement_locations = all_measurement_locations.at(image_index);
@@ -297,8 +331,32 @@ QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations(int floor
 // slot to be called when user clicks on a fingerprint dot
 void MainDialog::fingerprint_location_dot_selected(const QString& loc_id)
 {
-  // TODO
-  qDebug() << "Update table for" << loc_id;
+  int row_idx = locations_table->rowCount();
+  int found_row_idx = -1;
+
+  // Find the location table row for this location
+  while (row_idx > 0)
+  {
+    const QTableWidgetItem* loc_id_col;
+
+    loc_id_col = locations_table->item(row_idx - 1, 0);
+    if (loc_id_col->text() == loc_id)
+    {
+      found_row_idx = row_idx - 1;
+      break;
+    }
+
+    row_idx--;
+  }
+
+  if (found_row_idx >= 0)
+  {
+    locations_table->selectRow(found_row_idx);
+
+    // Don't call to highlight -- changing table row already generates
+    // the event.
+    //highlight_selected_capture_point(found_row_idx);
+  }
 }
 
 // The implementation of the QTableWidget forces this irritating solution.
@@ -323,6 +381,8 @@ void MainDialog::fingerprint_location_row_changed(int current_row, int, int, int
   QTableWidgetItem* cell_item = locations_table->item(current_row, 0);
 
   fingerprints_table->clearContents();
+
+  highlight_selected_capture_point(current_row);
 
   if (cell_item)
   {
@@ -406,4 +466,26 @@ void MainDialog::repopulate_fingerprints_table(const QString& loc_id)
   }
 
   fingerprints_table->resizeColumnsToContents();
+}
+
+void MainDialog::highlight_selected_capture_point(int row_index)
+{
+  QPoint pos;
+
+  // TODO: current_map_scene perhaps?
+  int map_index = floor_combobox->currentIndex();
+  MapScene* map_scene = m_map_scenes.at(map_index);
+  QTableWidgetItem* x_pos_col;
+  QTableWidgetItem* y_pos_col;
+
+  x_pos_col = locations_table->item(row_index, 1);
+  y_pos_col = locations_table->item(row_index, 2);
+
+  if (!x_pos_col || !y_pos_col)
+  {
+    return;
+  }
+
+  pos = QPoint(x_pos_col->text().toInt(), y_pos_col->text().toInt());
+  map_scene->highlight_location(pos);
 }

@@ -41,6 +41,8 @@ private:
   void init_floor_scenes(void);
   QList< QPair<QString, QPointF> > get_measurement_locations(int floor_number);
   void repopulate_fingerprints_table(const QString& loc_id);
+  void add_new_capture_point(const QPoint& point);
+  void highlight_selected_capture_point(int row_index);
 
   const QSqlDatabase& m_db;
   QStringList m_floor_image_filenames;

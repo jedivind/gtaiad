@@ -231,6 +231,16 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Delete Loc</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="delete_capture_button">
             <property name="enabled">
              <bool>false</bool>
@@ -305,7 +315,7 @@
    <slot>update_floor_scale(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
+     <x>490</x>
      <y>548</y>
     </hint>
     <hint type="destinationlabel">
@@ -353,8 +363,8 @@
    <slot>run_airodump_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>706</x>
-     <y>138</y>
+     <x>644</x>
+     <y>161</y>
     </hint>
     <hint type="destinationlabel">
      <x>930</x>
@@ -369,8 +379,8 @@
    <slot>insert_location_id_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>819</x>
-     <y>138</y>
+     <x>773</x>
+     <y>161</y>
     </hint>
     <hint type="destinationlabel">
      <x>930</x>
@@ -394,6 +404,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>delete_location()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>584</x>
+     <y>391</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>924</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>update_floor_scale(int)</slot>
@@ -402,5 +428,6 @@
   <slot>exit_capture_mode()</slot>
   <slot>insert_location_id_clicked()</slot>
   <slot>change_floor(int)</slot>
+  <slot>delete_location()</slot>
  </slots>
 </ui>

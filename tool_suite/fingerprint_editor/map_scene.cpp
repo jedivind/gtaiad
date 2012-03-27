@@ -18,7 +18,9 @@ PermanentMarker::PermanentMarker(const QRectF& rect,
 // TODO: How to handle deconstruction?
 
 MapScene::MapScene(const QString& map_filename, QObject* parent) : QGraphicsScene(parent),
-    m_pending_capture_loc_ellipseitem_ptr(NULL), m_permanent_marker_color(Qt::black), m_markers_list()
+    m_pending_capture_loc_ellipseitem_ptr(NULL),
+    m_highlighted_capture_loc_ellipseitem_ptr(NULL), m_permanent_marker_color(Qt::black),
+    m_markers_list()
 {
   QPixmap floor_pixmap(map_filename);
   QGraphicsPixmapItem* pixmap_item_ptr;
@@ -91,4 +93,30 @@ void MapScene::add_marker(const QString& loc_id, const QPointF& pos)
 void MapScene::set_marker_color(const QColor& color)
 {
   m_permanent_marker_color = color;
+}
+
+void MapScene::highlight_location(const QPointF& pos)
+{
+  int i_diameter = qFloor(qSqrt(((int(height()) << 1) + (int(width()) << 1))) + 0.5);
+  float diameter = i_diameter / 4;
+
+  unhighlight_location();
+
+  QColor pen_color(Qt::red);
+  pen_color.setAlpha(150);
+  QPen pen = QPen(pen_color);
+  pen.setWidth(i_diameter / 20);
+
+  m_highlighted_capture_loc_ellipseitem_ptr = addEllipse(
+      QRectF(pos.x()-diameter/2, pos.y()-diameter/2, diameter, diameter),
+      pen, QBrush());
+}
+
+void MapScene::unhighlight_location()
+{
+  if (m_highlighted_capture_loc_ellipseitem_ptr)
+  {
+    removeItem((QGraphicsItem*)m_highlighted_capture_loc_ellipseitem_ptr);
+    m_highlighted_capture_loc_ellipseitem_ptr = NULL;
+  }
 }

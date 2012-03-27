@@ -34,13 +34,15 @@ signals:
 public slots:
   void set_temp_marker(const QPointF& pos, const QColor& color = Qt::red);
   void clear_temp_marker(void);
+  void highlight_location(const QPointF& pos);
+  void unhighlight_location();
 
 private:
   void mousePressEvent(QGraphicsSceneMouseEvent* e);
 
   QGraphicsEllipseItem* m_pending_capture_loc_ellipseitem_ptr;
+  QGraphicsEllipseItem* m_highlighted_capture_loc_ellipseitem_ptr;
   QColor m_permanent_marker_color;
-  QGraphicsItemGroup* m_markers_group;   // Permanent markers
   QList<PermanentMarker*> m_markers_list;
 };
 
