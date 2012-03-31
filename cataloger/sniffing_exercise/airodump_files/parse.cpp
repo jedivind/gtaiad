@@ -135,6 +135,7 @@ void printLocNumAP(map<string, map<string, int> > & fingerprint){
 		cout << finger_It->first << ',' << finger_It->second.size() << endl;
 }
 
+//Order by signal strength, descending direction
 bool mySigMacidCompare(const pair<int, int> & p1, const pair<int, int> & p2){
 	return p1.first > p2.first;
 }
@@ -155,6 +156,7 @@ void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int
 	}
 	
 	map<int, set<string> >::iterator it1, it2, it3;
+	map<set<string>, set<int> > clusterMac;
 	for(it1 = macIdLocCluster.begin(); it1 != macIdLocCluster.end(); it1 ++){
 		for(it2 = it1, it2 ++; it2 != macIdLocCluster.end(); it2 ++){
 			for(it3 = it2, it3++; it3 != macIdLocCluster.end(); it3 ++){
@@ -169,10 +171,26 @@ void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int
 					for(it = cluster.begin(); it != cluster.end(); it ++)
 						cout << *it << ",";
 					cout << endl;
+					clusterMac[cluster].insert(it1->first);
+					clusterMac[cluster].insert(it2->first);
+					clusterMac[cluster].insert(it3->first);
 				}
 			}
 		}
 	}
+
+	map<set<string>, set<int> > :: iterator mssIt;
+	for(mssIt=clusterMac.begin(); mssIt != clusterMac.end(); mssIt ++){
+		set<string> :: iterator sit1;
+		set<int> :: iterator sit2;
+		for(sit1=mssIt->first.begin(); sit1!=mssIt->first.end(); sit1++)
+			cout << *sit1 << ",";
+		cout << "\t";
+		for(sit2=mssIt->second.begin(); sit2!=mssIt->second.end(); sit2++)
+			cout << *sit2 << ", ";
+		cout << endl;
+	}
+	
 }
 
 //Load the mac_Index.csv file (contains <mac, index>)  into a map structure 
@@ -187,6 +205,27 @@ void LoadMacIndex(map<string, int> & macIndexMap, ifstream & in)
 		getline(lineStream, index);
 		macIndexMap[macAdd] = atoi(index.c_str());
 	}
+}
+
+void printCommonMac(map<string, vector<pair<int, int> > > & locSigMacid){
+	map<string, vector<pair<int, int> > > :: iterator it, jt;
+	it = locSigMacid.begin();
+	vector<pair<int, int> >::iterator vit=(it->second).begin(), vjt;
+	for(; vit != (it->second).end(); vit++){
+		int mac=vit->second;
+		for(jt=locSigMacid.begin(); jt!=locSigMacid.end(); jt++){
+			vjt=(jt->second).begin();
+			for(; vjt!=(jt->second).end(); vjt++){
+				if(vjt->second == mac) break;
+			}
+			if(vjt == (jt->second).end()) 
+				break;
+		}
+		if(jt == locSigMacid.end()){
+			cout << mac << " is a common mac address" << endl;	
+		}
+	}
+	cout << "Searching common mac address process ends" << endl;
 }
 
 
@@ -223,6 +262,7 @@ int main(int argc, const char * argv[])
 		locSigMacid[location].push_back(tempPair);		
 	}
 	data.close();
+	printCommonMac(locSigMacid);
 	clusterFingerprint(locSigMacid, 10, 5);
 	return 0;
 }	
