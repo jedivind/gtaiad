@@ -96,6 +96,8 @@ void PickStrongFingerprint(vector<pair<int, string> >& vecSigMac, map<string, in
 int main(int argc, const char * argv[])
 {
 	if(argc != 3){
+    // some_median.csv - building fingerprints file
+    // test_data_median.csv - location fingerprint
 		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.csv "<< endl;
 		return 0;
 	}
