@@ -5,11 +5,12 @@
 #include <QPixmap>
 #include <QPointF>
 #include <QSqlQuery>
+#include <time.h>
 
-#include "median.cpp"
-//#include "parse.cpp"  will not need this since there is the DB to read from.
+#include <dos.h>
+
 #include "main_dialog.h"
-//#include "map_scene.h"
+#include "map_scene.h"
 
 MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent),
     m_db(db), m_floor_image_filenames(QStringList())
@@ -25,7 +26,7 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
 
   init_floor_scenes();
 
-  change_floor(0);
+  //change_floor(0);
 
   update_floor_scale(zoom_slider->value());
 
@@ -34,10 +35,16 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
 #endif
 
   // Remove dialog example data
-  loc_id_line_edit->clear();
   x_pos_label->clear();
   y_pos_label->clear();
 
+}
+
+
+void MainDialog:wait(long seconds)
+{
+	seconds *= 1000;
+	sleep(seconds);
 }
 
 // Slot called when the zoom slider position is changed by the end user.
@@ -48,19 +55,30 @@ void MainDialog::update_floor_scale(int scaling_factor)
 }
 
 
-void MainDialog::run_airodump()
+int MainDialog::run_airodump(void)
 {
+
 	//vinay's code.
 }
 
 
+void MainDialog::lily_code_execute(void)
+{
+FILE *read_results = popen("./lilcode","r");
+fread(return_value,sizeof(char),100,read_results);
+}
+
 void MainDialog::update_location_clicked(void)
 {
     //call code to run airodump and get the present location data.feed it into lily's code.
-    run_airodump();
+    return_value = run_airodump();
+    wait(60);
     //present_location_data = run_airodump();
     //call lily's code and other map refreshing code.
-    validate_loc_id = get_measurement_locations_from_DB(present_location_data); 
+    lily_code_execute();
+    //parse the return value
+
+    int validate_loc_id = get_measurement_locations_from_DB(present_location_data); 
       if (!validate_loc_id())
   	{
     		QMessageBox::warning(this,"Update Location again");
@@ -72,8 +90,9 @@ void MainDialog::update_location_clicked(void)
     return;
   // TODO: perform AP capture magic
   // TODO: perform Database magic
+  Object::connect(map_scene, SIGNAL(sliderMoved(int value)),
+        this, SLOT(update_floor_scale(int value)));
 
-  //emit new_capture_added(new_capture_location);
 }
 
 void MainDialog::update_location_changed(char *loc_id,int floor_number)
@@ -86,10 +105,6 @@ void MainDialog::update_location_changed(char *loc_id,int floor_number)
 
 }
 
-// slot: called when user clicks on the floor map for red dot placement
-  // If the location was updated and x and y have some value but now after some time
-  // presses the update again .
-  // TODO: Update enables of buttons when loc ID is entered
 
 // Do necessary clearing of widgets and enable/disables.need to design appropriate widgets first.
 

@@ -6,6 +6,9 @@
 #include <QPointF>
 #include <QStringList>
 #include <QSqlDatabase>
+#include <QTableWidgetItem>
+#include <QPair>
+#include <QList>
 
 #include "ui_main_dialog.h"
 #include "map_scene.h"
@@ -16,14 +19,13 @@ class MainDialog : public QDialog, public Ui::MainDialog
 
 public:
   MainDialog(QWidget* parent = 0, const QSqlDatabase& db = QSqlDatabase());
+  void wait(long seconds);
 
 public slots:
   void update_floor_scale(int scaling_factor);   // Set scale to 1/scaling_factor
-  void enter_capture_mode(void);
   void exit_capture_mode(void);
-  void update_location_clicked(void);
+  void update_location_clicked(void);  //when the user clicks update location.
   void capture_location_changed(const QPointF& pos);
-  void insert_location_id_clicked(void);
   void change_floor(int image_index);
 
 signals:
@@ -35,6 +37,7 @@ private:
   void init_floor_scenes(void);
 
   const QSqlDatabase& m_db;
+  char *return_value;
   QStringList m_floor_image_filenames;
   QList<MapScene*> m_map_scenes;
 };

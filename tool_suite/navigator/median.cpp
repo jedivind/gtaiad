@@ -56,8 +56,8 @@ QList< QPair<QString, QPointF> > MainDialog::get_measurement_locations_from_db(Q
   calculate_positions_from_data(rvalue,present_capture);
 }
 
-
-int calculate_positions_from_data(QList< QPair<QString, QPointF> > data, QList present_capture)
+//TO DO : Return the positions of the current user.not return int.
+map<> or Vector calculate_positions_from_data(QList< QPair<QString, QPointF> > data, QList present_capture)
 {
 	
 	QList < QPair<Qstring,QPointF> >::iterator i;
@@ -107,7 +107,8 @@ int calculate_positions_from_data(QList< QPair<QString, QPointF> > data, QList p
 		}	
 	
 	}
-	
-
-	return 0;
+	if(map or vector did not get anything)
+		return NULL;
+	else
+		return map or vector of data
 }	
