@@ -231,7 +231,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="delete_location_button">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -405,7 +405,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>delete_location_button</sender>
    <signal>clicked()</signal>
    <receiver>MainDialog</receiver>
    <slot>delete_location()</slot>

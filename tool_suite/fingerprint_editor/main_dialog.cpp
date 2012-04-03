@@ -290,6 +290,8 @@ void MainDialog::change_floor(int image_index)
 
   locations_table->sortByColumn(0, Qt::AscendingOrder);
   locations_table->resizeColumnsToContents();
+
+  delete_location_button->setEnabled(false);
 }
 
 // read from the database all of a floor's loc_ids and xpos,ypos information
@@ -383,6 +385,9 @@ void MainDialog::fingerprint_location_row_changed(int current_row, int, int, int
   fingerprints_table->clearContents();
 
   highlight_selected_capture_point(current_row);
+
+  // Enable Delete Locations button
+  delete_location_button->setEnabled(true);
 
   if (cell_item)
   {
@@ -488,4 +493,107 @@ void MainDialog::highlight_selected_capture_point(int row_index)
 
   pos = QPoint(x_pos_col->text().toInt(), y_pos_col->text().toInt());
   map_scene->highlight_location(pos);
+}
+
+void MainDialog::delete_location(void)
+{
+  int locations_table_selected_row_idx;
+
+  locations_table_selected_row_idx = locations_table->currentRow();
+
+  if (locations_table_selected_row_idx < 0)
+  {
+    return;
+  }
+
+  QString loc_id = locations_table->item(locations_table_selected_row_idx, 0)->text();
+
+  // Check if this location has any fingerprint data.  If so, confirm with
+  // user it is okay to delete it.
+
+  QSqlQuery q(m_db);
+  bool res;
+
+  q.prepare(" \
+      SELECT COUNT(capture_fingerprint_bssid) \
+      FROM capture_fingerprints \
+      WHERE capture_location_name = :capture_location_name");
+  q.bindValue(":capture_location_name", loc_id);
+
+  res = q.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_fingerprints table. #4");
+    return;
+  }
+
+  res = q.first();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during SELECT from capture_fingerprints table. #5");
+    return;
+  }
+
+  int row_count = q.value(0).toInt();
+
+  if (row_count)
+  {
+    int ret = QMessageBox::question(this, "Confirm Delete Operation",
+        "Okay to delete this location and all of its fingerprints?",
+        QMessageBox::Yes|QMessageBox::No);
+
+    if (ret & QMessageBox::No)
+    {
+      // User changed mind
+      return;
+    }
+
+    // Delete the fingerprints
+    q.prepare(" \
+        DELETE \
+        FROM capture_fingerprints \
+        WHERE capture_location_name = :capture_location_name");
+    q.bindValue(":capture_location_name", loc_id);
+
+    res = q.exec();
+
+    if (!res)
+    {
+      QMessageBox::warning(this, "Database Error",
+          "Failed during DELETE from capture_fingerprints table.");
+      return;
+    }
+
+    fingerprints_table->clearContents();
+  }
+
+  // Delete the fingerprints
+  q.prepare(" \
+      DELETE \
+      FROM capture_locations \
+      WHERE capture_location_name = :capture_location_name");
+  q.bindValue(":capture_location_name", loc_id);
+
+  res = q.exec();
+
+  if (!res)
+  {
+    QMessageBox::warning(this, "Database Error",
+        "Failed during DELETE from capture_locations table.");
+    return;
+  }
+
+  int map_index = floor_combobox->currentIndex();
+  QPointF map_point = all_measurement_locations[map_index][locations_table_selected_row_idx].second;
+
+  locations_table->removeRow(locations_table_selected_row_idx);
+  locations_table->selectRow(0);
+
+  all_measurement_locations[map_index].removeAt(locations_table_selected_row_idx);
+
+  // TODO: Remove the dot from the map scene
 }

@@ -31,6 +31,7 @@ public slots:
   void fingerprint_location_dot_selected(const QString&);
   void fingerprint_location_row_changed(int current_row, int current_column, int previous_row, int previous_column);
   void reset_table_signal_filter_kludge(void);
+  void delete_location(void);
 
 signals:
   void new_capture_canceled(void);
