@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>MainDialog</class>
+ <widget class="QDialog" name="MainDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -172,7 +172,7 @@
   <connection>
    <sender>quit_button</sender>
    <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MainDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -188,7 +188,7 @@
   <connection>
    <sender>update_location_button</sender>
    <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MainDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -204,7 +204,7 @@
   <connection>
    <sender>stop_navigation_button</sender>
    <signal>clicked(bool)</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MainDialog</receiver>
    <slot>setWindowModified(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -220,7 +220,7 @@
   <connection>
    <sender>send_destination_button</sender>
    <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MainDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
