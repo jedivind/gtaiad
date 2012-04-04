@@ -12,8 +12,14 @@ CONFIG -= app_bundle
 #QMAKE_CLEAN += Makefile
 QMAKE_CLEAN += $(TARGET)
 
+HEADERS = \
+  main_dialog.h \
+  map_scene.h
+
 SOURCES = \
-  main.cpp
+  main.cpp \
+  main_dialog.cpp \
+  map_scene.cpp \
 
 FORMS = \
   main_dialog.ui

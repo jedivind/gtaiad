@@ -6,23 +6,23 @@
 #include <QPointF>
 #include <QSqlQuery>
 #include <time.h>
-
-#include <dos.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #include "main_dialog.h"
 #include "map_scene.h"
 
-MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent),
-    m_db(db), m_floor_image_filenames(QStringList())
+MainDialog::MainDialog(QWidget* parent) : QDialog(parent),
+     m_floor_image_filenames(QStringList())
 {
-  MapScene* map_scene = new MapScene;
 
-  assert(db.isOpen());
-
+  //assert(db.isOpen());
   setupUi(this);
   m_floor_image_filenames << "../level_one.jpg";
   m_floor_image_filenames << "../level_two.jpg";
   m_floor_image_filenames << "../level_three.jpg";
+
+  MapScene *map_scene = static_cast<MapScene*>(map_view->scene());
 
   init_floor_scenes();
 
@@ -41,7 +41,7 @@ MainDialog::MainDialog(QWidget* parent, const QSqlDatabase& db) : QDialog(parent
 }
 
 
-void MainDialog:wait(long seconds)
+void MainDialog::wait(long seconds)
 {
 	seconds *= 1000;
 	sleep(seconds);
@@ -57,51 +57,67 @@ void MainDialog::update_floor_scale(int scaling_factor)
 
 int MainDialog::run_airodump(void)
 {
-
+int ret_1= system("ifconfig wlan0 down");
+int ret_2 = system("iwconfig wlan0 mode monitor");
+int ret_3 = system("ifconfig wlan0 up");
+int ret_4 = system("./airodump-ng -f 2000 -t 6000 --channel 1,6,11 -w local wlan0");
 	//vinay's code.
+if(ret_1 && ret_2 && ret_3 && ret_4)
+	return 1;
 }
 
 
-void MainDialog::lily_code_execute(void)
+void MainDialog::lily_code_execute(FILE* read_results)
 {
-FILE *read_results = popen("./lilcode","r");
-fread(return_value,sizeof(char),100,read_results);
+	read_results = popen("./lilcode","r");
+	fread(return_value,sizeof(char),100,read_results);
 }
 
 void MainDialog::update_location_clicked(void)
 {
     //call code to run airodump and get the present location data.feed it into lily's code.
-    return_value = run_airodump();
+    if(!run_airodump())
+	run_airodump();
     wait(60);
+    //update the popup boxes.
+    FILE *read_results;
     //present_location_data = run_airodump();
     //call lily's code and other map refreshing code.
-    lily_code_execute();
+    lily_code_execute(read_results);
     //parse the return value
-
-    int validate_loc_id = get_measurement_locations_from_DB(present_location_data); 
-      if (!validate_loc_id())
-  	{
-    		QMessageBox::warning(this,"Update Location again");
-  	}
-
-    update_location_changed(validate_loc_id,floor_number);
+    char buffer[100];
+    QString loc_id;
+    int xpos,ypos,floor_number;
+    while(fgets(buffer,100,read_results)!=NULL)
+	{
+    	floor_number = (int)buffer - 48; //get from lily's code
+	//location; 
+	}
+	QPointF present_position;
+	present_position.setX(xpos);
+        present_position.setY(ypos);
+        x_pos_label->setText((QString)xpos);
+        y_pos_label->setText((QString)ypos);
+    // = get_measurement_locations_from_DB(present_location_data); 
+    update_location_changed(present_position,floor_number,loc_id);
     QMessageBox::warning(this, "Location",
         "Updating for the first time.");
     return;
   // TODO: perform AP capture magic
   // TODO: perform Database magic
-  Object::connect(map_scene, SIGNAL(sliderMoved(int value)),
+  MapScene *map_scene = static_cast<MapScene*>(map_view->scene());
+  QObject::connect(map_scene, SIGNAL(sliderMoved(int value)),
         this, SLOT(update_floor_scale(int value)));
 
 }
 
-void MainDialog::update_location_changed(char *loc_id,int floor_number)
+void MainDialog::update_location_changed(const QPointF& present_position,int floor_number,const QString& loc_id)
 {
 	init_floor_scenes();
 	update_floor_scale(100);
 	change_floor(floor_number);
-	MapScene *mapscene = new MapScene;
-	mapscene->add_marker(loc_id,position); //to add the marker to the position where the use is right now.
+	MapScene *mapscene = static_cast<MapScene*>(map_view->scene());
+	mapscene->add_marker(loc_id,present_position); //to add the marker to the position where the use is right now.
 
 }
 
@@ -115,7 +131,7 @@ void MainDialog::init_floor_scenes(void)
   // assumed order is 1, 2, 3
   foreach (const QString& filename, m_floor_image_filenames)
   {
-    MapScene* map_scene = new MapScene;
+    MapScene* map_scene = static_cast<MapScene*>(map_view->scene());
     QPixmap floor_pixmap(filename);
     map_scene->addPixmap(floor_pixmap);
 

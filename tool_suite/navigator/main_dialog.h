@@ -16,16 +16,14 @@
 class MainDialog : public QDialog, public Ui::MainDialog
 {
   Q_OBJECT
-
 public:
-  MainDialog(QWidget* parent = 0, const QSqlDatabase& db = QSqlDatabase());
+  MainDialog(QWidget* parent = 0);
   void wait(long seconds);
 
 public slots:
   void update_floor_scale(int scaling_factor);   // Set scale to 1/scaling_factor
-  void exit_capture_mode(void);
   void update_location_clicked(void);  //when the user clicks update location.
-  void capture_location_changed(const QPointF& pos);
+  void update_location_changed(const QPointF&,int,const QString&);
   void change_floor(int image_index);
 
 signals:
@@ -35,8 +33,10 @@ signals:
 private:
   bool validate_loc_id(void);
   void init_floor_scenes(void);
+  int run_airodump(void);
+  void lily_code_execute(FILE*);
 
-  const QSqlDatabase& m_db;
+  //const QSqlDatabase& m_db;
   char *return_value;
   QStringList m_floor_image_filenames;
   QList<MapScene*> m_map_scenes;

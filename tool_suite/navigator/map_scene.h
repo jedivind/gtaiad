@@ -35,7 +35,7 @@ private:
   QGraphicsEllipseItem* m_pending_capture_loc_ellipseitem_ptr;
   QColor m_permanent_marker_color;
   QGraphicsItemGroup* m_markers_group;   // Permanent markers
-  QList<PermanentMarker*> m_markers_list;
+  QList<PermanentMarker*> m_markers_list; //maintain a list of older positions of the user.
 };
 
 #endif

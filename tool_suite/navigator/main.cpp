@@ -7,7 +7,7 @@
 #include <QDialog>
 
 #include "main_dialog.h"
-#include "map_scene.h"
+//#include "map_scene.h"
 
 #define DB_FILENAME "klaus.db"
 
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  MainDialog* main_dialog = new MainDialog(0, db);
+  MainDialog* main_dialog = new MainDialog(0);
 
 
   main_dialog->show();

@@ -29,7 +29,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QGraphicsView" name="graphicsView"/>
+            <widget class="QGraphicsView" name="map_view"/>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout">
@@ -93,6 +93,46 @@
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="Xlabel">
+           <property name="minimumSize">
+            <size>
+             <width>222</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>X :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="x_pos_label">
+           <property name="minimumSize">
+            <size>
+             <width>222</width>
+             <height>17</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Position</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="ylabel">
+           <property name="text">
+            <string>Y :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="y_pos_label">
+           <property name="text">
+            <string>Position</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="update_location_button">
            <property name="text">
@@ -186,22 +226,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>update_location_button</sender>
-   <signal>clicked()</signal>
-   <receiver>MainDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>674</x>
-     <y>63</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>403</x>
-     <y>271</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>stop_navigation_button</sender>
    <signal>clicked(bool)</signal>
    <receiver>MainDialog</receiver>
@@ -226,6 +250,22 @@
     <hint type="sourcelabel">
      <x>489</x>
      <y>507</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>quit_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>508</y>
     </hint>
     <hint type="destinationlabel">
      <x>403</x>
