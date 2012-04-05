@@ -13,9 +13,9 @@ do
 	grep "3K00${i}," $DATAFILE > ${NAME}/3K00${i}.csv
 done
 
-grep "2k008," $DATAFILE > ${NAME}/2K008.csv
-grep "2k009," $DATAFILE > ${NAME}/2K009.csv
-grep "3k009," $DATAFILE > ${NAME}/3K009.csv
+grep "2K008," $DATAFILE > ${NAME}/2K008.csv
+grep "2K009," $DATAFILE > ${NAME}/2K009.csv
+grep "3K009," $DATAFILE > ${NAME}/3K009.csv
 
 
 

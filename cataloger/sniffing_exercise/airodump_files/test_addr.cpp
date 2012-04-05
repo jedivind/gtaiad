@@ -13,33 +13,107 @@ using namespace std;
 
 const double ratio_epsilon = 0.000001;
 const double dis_epsilon = 1;
+//interval for pixels when projecting the point onto the corridor
+const int Interval = 10; 
 
-int keyCompare(const map<string,int> &, const map<string, int> &, double &, double &);
+const int l1start=686;
+const int l1end=1226;
+const int l2start=1033;
+const int l2end=1437;
+const int l3start=1437;
+const int l3end=2228;
+const int l4start=1287;
+const int l4end=2103;
+const int l5start=1679;
+const int l5end=1801;
+const int l6start=2006;
+const int l6end=2228;
 
-void keyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, set<string> & closestLoc)
-{
-	map<string, map<string, int> >::const_iterator it;
-	double maxRatio = 0, minDis = 9999;
-	double curRatio, curDis;
-	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
-		if(keyCompare(it->second, test_finger, curRatio, curDis) >= 3){
-			if((curRatio > maxRatio + ratio_epsilon) || (abs(curRatio-maxRatio)<ratio_epsilon && curDis<minDis-dis_epsilon)){
-				closestLoc.clear();
-				maxRatio = curRatio;
-				minDis = curDis;
-				closestLoc.insert(it->first);
-			}
-			if(abs(curRatio-maxRatio) < ratio_epsilon && abs(curDis-minDis) < dis_epsilon){
-				closestLoc.insert(it->first);
-				if(curDis < minDis) minDis = curDis;
-			}
-				
-		}
-	}	
+double l1(double x){
+	return -0.0259*x+2356.8;
+}
+double l2(double x){
+	return 0.0056*x*x-16.5938*x+13475;
 }
 
+double l3(double x){
+	return 0.5837*x+412.4187;
+}
+
+double l4(double x){
+	return 0.5908*x+680.3284;
+}
+
+double l5(double x){
+	return -1.6311*x+4404.7;
+}
+
+double l6(double x){
+	return -1.6802*x+5456.4;
+}
+
+double DisSquareTwoPts(double x1, double y1, double x2, double y2){
+	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+}
+
+//Given any point (cur_x, cur_y), find the cloest point on the corridor and also return the distance 
+double FindPointInCorridor(int cur_x, int cur_y, int & x, int & y){
+	double minDisSquare = 99999;
+	double tempx, tempy, tempD;
+	for(tempx=l1start; tempx <= l1end; tempx += Interval){
+		tempy = l1(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	
+	for(tempx=l2start; tempx <= l2end; tempx += Interval){
+		tempy = l2(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	for(tempx=l3start; tempx <= l3end; tempx += Interval){
+		tempy = l3(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	for(tempx=l4start; tempx <= l4end; tempx += Interval){
+		tempy = l4(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	for(tempx=l5start; tempx <= l5end; tempx += Interval){
+		tempy = l5(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	for(tempx=l6start; tempx <= l6end; tempx += Interval){
+		tempy = l6(tempx);
+		if((tempD=DisSquareTwoPts(cur_x, cur_y, tempx, tempy)) < minDisSquare){
+			minDisSquare = tempD;
+			x=tempx;
+			y=tempy;
+		}
+	}
+	return sqrt(minDisSquare);	
+} 
+
 /*
-This function return the number of common mac address. 
+This function return the number of common mac address and also set the value for ratio and aveDistance. 
 Ratio is (A intersect B)/(A union B). And the aveDistance is based on pairwise fingerprint.
 */
 int keyCompare(const map<string, int> & ref, const map<string, int> & cur, double &ratio, double &aveDistance) 
@@ -64,7 +138,63 @@ int keyCompare(const map<string, int> & ref, const map<string, int> & cur, doubl
 	return numCommonStr;
 					
 }
+void keyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, set<string> & closestLoc)
+{
+	map<string, map<string, int> >::const_iterator it;
+	double maxRatio = 0, minDis = 9999;
+	double curRatio, curDis;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if(keyCompare(it->second, test_finger, curRatio, curDis) >= 3){
+			if((curRatio > maxRatio + ratio_epsilon) || (abs(curRatio-maxRatio)<ratio_epsilon && curDis<minDis-dis_epsilon)){
+				closestLoc.clear();
+				maxRatio = curRatio;
+				minDis = curDis;
+				closestLoc.insert(it->first);
+			}
+			if(abs(curRatio-maxRatio) < ratio_epsilon && abs(curDis-minDis) < dis_epsilon){
+				closestLoc.insert(it->first);
+				if(curDis < minDis) minDis = curDis;
+			}
+		}
+	}	
+}
 
+double BestPt(map<string, pair<int, int> > & locMap, set<string> & closestLoc, int & x, int & y, int& floor){
+	int numFloorTwo=0, numFloorThree=0;
+	set<string>::iterator set_it;
+	for(set_it = closestLoc.begin(); set_it != closestLoc.end(); ++set_it){
+		if((*set_it).find("2K") == string::npos) numFloorThree ++;
+		else numFloorTwo ++;
+	}
+	int cur_x=0, cur_y=0;
+	if(numFloorThree > numFloorTwo){
+		floor = 3;
+		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); ++set_it){
+			if((*set_it).find("3K") != string::npos){
+				pair<int, int> temp = locMap[*set_it];
+				cur_x += temp.first;
+				cur_y += temp.second;
+			}
+		}
+		cur_x /= numFloorThree;
+		cur_y /= numFloorThree;
+	}	
+	if(numFloorThree < numFloorTwo){
+		floor = 2;
+		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); ++set_it){
+			if((*set_it).find("2K") != string::npos){
+				pair<int, int> temp = locMap[*set_it];
+				cur_x += temp.first;
+				cur_y += temp.second;
+			}
+		}
+		cur_x /= numFloorTwo;
+		cur_y /= numFloorTwo;
+	}	
+	
+	if(numFloorThree != numFloorTwo) return FindPointInCorridor(cur_x, cur_y, x, y);
+	if(numFloorThree == numFloorTwo) {floor = 0;  return 99999;}
+}
 
 
 //Order by signal strength, descending direction
@@ -95,14 +225,17 @@ void PickStrongFingerprint(vector<pair<int, string> >& vecSigMac, map<string, in
 
 int main(int argc, const char * argv[])
 {
-	if(argc != 3){
-    // some_median.csv - building fingerprints file
-    // test_data_median.csv - location fingerprint
-		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.csv "<< endl;
+	if(argc != 4){
+    /* some_median.csv - building fingerprints file
+     * test_data_median.csv - location fingerprint
+     * locations.csv  - the file which stores all the coordinates for each location
+     */
+		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.csv "<< " locations.csv" << endl;
 		return 0;
 	}
 	ifstream data(argv[1]);
 	ifstream test_data(argv[2]);
+	ifstream loc_data(argv[3]);
 	string line;
 	map<string, map<string, int> > fingerprint;
 	
@@ -117,12 +250,10 @@ int main(int argc, const char * argv[])
 		getline(lineStream, location, ',');
 		getline(lineStream, macAdd, ',');
 		getline(lineStream, sigStrMed);
-
-		pair<int, string> tempPair(atoi(sigStrMed.c_str()), macAdd);
-		locSigMac[location].push_back(tempPair);		
+		locSigMac[location].push_back(pair<int, string> (atoi(sigStrMed.c_str()), macAdd) );		
 	}
-	data.close();
 
+	//Here is to read the fingerprint for test location
 	vector<pair<int, string> > test_sigmac;
 	map<string, int> test_fingerprint;
 	string location;
@@ -133,19 +264,40 @@ int main(int argc, const char * argv[])
 		getline(lineStream, location, ',');
 		getline(lineStream, macAdd, ',');
 		getline(lineStream, sigStrMed);
-		pair<int, string> tempPair(atoi(sigStrMed.c_str()), macAdd);
-		test_sigmac.push_back(tempPair);
+		test_sigmac.push_back(pair<int,string> (atoi(sigStrMed.c_str()), macAdd));
 	}
 	cout << location << endl;
+
+        //Read all the <location, <x,y> > in a map data structure
+	map<string, pair<int, int> > locMap;
+	getline(loc_data, line); //ignore the header
+	while(getline(loc_data, line)){
+		stringstream lineStream(line);
+		string loc, numFloor, numX, numY;
+		getline(lineStream, loc, ';');
+		getline(lineStream, numFloor, ';');
+		getline(lineStream, numX, ';');
+		getline(lineStream, numY);
+		locMap[loc] = pair<int, int>(atoi(numX.c_str()), atoi(numY.c_str()));
+	}
+		
 	PickStrongFingerprint(locSigMac, fingerprint, 10, 5);
 	PickStrongFingerprint(test_sigmac, test_fingerprint, 10, 5);
 	set<string> closestLoc;
 	keyComparison(fingerprint, test_fingerprint, closestLoc);
-	set<string>::iterator setit;
-	for(setit=closestLoc.begin(); setit!=closestLoc.end(); setit++)
-		cout << *setit << '\t';
-	cout << endl;
-	cout << endl;
+
+	int x, y, floor;
+	double dis = BestPt(locMap, closestLoc, x, y, floor);
+	if(floor != 0){
+		double error = sqrt((locMap[location].first-x)*(locMap[location].first-x)+(locMap[location].second-y)*(locMap[location].second-y));
+		cout << floor << '\t' << error/sqrt(27*27+139*139) << '\t';
+		/*set<string>::iterator set_it;
+		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); set_it++)
+			cout << *set_it << "  ";*/
+		cout << endl;
+	}else{
+		cout << "Cannot decide floor number" << endl;
+	}
 	return 0;
 }	
 
