@@ -13,6 +13,8 @@ using namespace std;
 
 const double ratio_epsilon = 0.000001;
 const double dis_epsilon = 1;
+const int doorDisSquare = (1167-1135)*(1167-1135)+(2180-2081)*(2180-2081); //between 2K008 and 2K009
+
 //interval for pixels when projecting the point onto the corridor
 const int Interval = 10; 
 
@@ -58,7 +60,7 @@ double DisSquareTwoPts(double x1, double y1, double x2, double y2){
 
 //Given any point (cur_x, cur_y), find the cloest point on the corridor and also return the distance 
 double FindPointInCorridor(int cur_x, int cur_y, int & x, int & y){
-	double minDisSquare = 99999;
+	double minDisSquare = 999999999;
 	double tempx, tempy, tempD;
 	for(tempx=l1start; tempx <= l1end; tempx += Interval){
 		tempy = l1(tempx);
@@ -159,6 +161,71 @@ void keyComparison(map<string, map<string, int> > & fingerprint, map<string, int
 	}	
 }
 
+//This function return the aveDistance. 
+double EuKeyCompare(const map<string, int> & ref, const map<string, int> & cur) 
+{
+	int numCommonStr = 0;
+	int distance = 0;
+	map<string, int>::const_iterator it1, it2, itt1, itt2;
+	for(it1=ref.begin(); it1!=ref.end(); it1++){
+		if((itt1 = cur.find(it1->first)) != cur.end()){
+			numCommonStr ++;
+			for(it2=it1, it2++; it2!=ref.end(); it2++){
+				if((itt2 = cur.find(it2->first)) != cur.end()){
+					int temp=((it1->second - it2->second)-(itt1->second-itt2->second));
+					distance += temp*temp;
+				}
+			}
+		}
+	}
+	return sqrt(distance)/numCommonStr;
+}
+
+//Put the closest location in the set<string> 
+void EuKeyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, set<string> & closestLoc)
+{
+	map<string, map<string, int> >::const_iterator it;
+	double  minDis = 999999;
+	double curDis;
+	string loc;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curDis = EuKeyCompare(it->second, test_finger)) < minDis){
+			minDis = curDis;
+			loc = it->first;
+		}
+	}
+	closestLoc.insert(loc);	
+}
+//This function return the cosine similarity. 
+double SimKeyCompare(const map<string, int> & ref, const map<string, int> & cur) 
+{
+	int numCommonStr = 0;
+	map<string, int>::const_iterator it1, it2, itt1, itt2;
+	for(it1=ref.begin(); it1!=ref.end(); it1++){
+		if((itt1 = cur.find(it1->first)) != cur.end()){
+			numCommonStr ++;
+		}
+	}
+	return numCommonStr/(sqrt(ref.size())*sqrt(cur.size()));
+}
+
+//Put the closest location in the set<string> 
+void SimKeyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, set<string> & closestLoc)
+{
+	map<string, map<string, int> >::const_iterator it;
+	double  maxSim = -999;
+	double curSim;
+	string loc;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
+			maxSim = curSim;
+			loc = it->first;
+		}
+	}
+	closestLoc.insert(loc);	
+}
+
+
 double BestPt(map<string, pair<int, int> > & locMap, set<string> & closestLoc, int & x, int & y, int& floor){
 	int numFloorTwo=0, numFloorThree=0;
 	set<string>::iterator set_it;
@@ -178,6 +245,8 @@ double BestPt(map<string, pair<int, int> > & locMap, set<string> & closestLoc, i
 		}
 		cur_x /= numFloorThree;
 		cur_y /= numFloorThree;
+		if(numFloorThree <= 3) { x = cur_x; y = cur_y;}
+		else return FindPointInCorridor(cur_x, cur_y, x, y);
 	}	
 	if(numFloorThree < numFloorTwo){
 		floor = 2;
@@ -190,9 +259,9 @@ double BestPt(map<string, pair<int, int> > & locMap, set<string> & closestLoc, i
 		}
 		cur_x /= numFloorTwo;
 		cur_y /= numFloorTwo;
+		if(numFloorTwo <= 3) { x = cur_x; y = cur_y;}
+		else return FindPointInCorridor(cur_x, cur_y, x, y);
 	}	
-	
-	if(numFloorThree != numFloorTwo) return FindPointInCorridor(cur_x, cur_y, x, y);
 	if(numFloorThree == numFloorTwo) {floor = 0;  return 99999;}
 }
 
@@ -284,16 +353,16 @@ int main(int argc, const char * argv[])
 	PickStrongFingerprint(locSigMac, fingerprint, 10, 5);
 	PickStrongFingerprint(test_sigmac, test_fingerprint, 10, 5);
 	set<string> closestLoc;
-	keyComparison(fingerprint, test_fingerprint, closestLoc);
+	SimKeyComparison(fingerprint, test_fingerprint, closestLoc);
 
 	int x, y, floor;
 	double dis = BestPt(locMap, closestLoc, x, y, floor);
 	if(floor != 0){
 		double error = sqrt((locMap[location].first-x)*(locMap[location].first-x)+(locMap[location].second-y)*(locMap[location].second-y));
-		cout << floor << '\t' << error/sqrt(27*27+139*139) << '\t';
-		/*set<string>::iterator set_it;
+		cout << floor << '\t' << error/sqrt(doorDisSquare) << '\t';
+		set<string>::iterator set_it;
 		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); set_it++)
-			cout << *set_it << "  ";*/
+			cout << *set_it << "  ";
 		cout << endl;
 	}else{
 		cout << "Cannot decide floor number" << endl;

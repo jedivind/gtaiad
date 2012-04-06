@@ -31,6 +31,8 @@ Examples:
 
     python3 consolidator.py --new > all_data.csv
     for a in `find 0226-PK/* -type d`; do python3 consolidator.py --path $a; done >> all_data.csv
+
+ or for a in `find 0226-PK/* -type d | grep -v .svn`
 """
 
 def parse_args(argv):
