@@ -187,6 +187,7 @@ void EuKeyComparison(map<string, map<string, int> > & fingerprint, map<string, i
 	map<string, map<string, int> >::const_iterator it;
 	double  minDis = 999999;
 	double curDis;
+	string loc1, loc2, loc3;
 	string loc;
 	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
 		if((curDis = EuKeyCompare(it->second, test_finger)) < minDis){
@@ -194,8 +195,32 @@ void EuKeyComparison(map<string, map<string, int> > & fingerprint, map<string, i
 			loc = it->first;
 		}
 	}
-	closestLoc.insert(loc);	
+	loc1 = loc;
+	closestLoc.insert(loc);
+	minDis = 999999;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curDis = EuKeyCompare(it->second, test_finger)) < minDis){
+			if(it->first != loc1){ 
+				minDis = curDis;
+				loc = it->first;
+			}
+		}
+	}
+	closestLoc.insert(loc);
+	loc2 = loc;
+	minDis = 999999;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curDis = EuKeyCompare(it->second, test_finger)) < minDis){
+			if(it->first != loc1 && it->first != loc2){
+				minDis = curDis;
+				loc = it->first;
+			}
+		}
+	}
+	closestLoc.insert(loc);
+	loc3 = loc;	
 }
+
 //This function return the cosine similarity. 
 double SimKeyCompare(const map<string, int> & ref, const map<string, int> & cur) 
 {
@@ -216,6 +241,8 @@ void SimKeyComparison(map<string, map<string, int> > & fingerprint, map<string, 
 	double  maxSim = -999;
 	double curSim;
 	string loc;
+	string loc1, loc2, loc3;
+	maxSim = -999;
 	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
 		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
 			maxSim = curSim;
@@ -223,6 +250,31 @@ void SimKeyComparison(map<string, map<string, int> > & fingerprint, map<string, 
 		}
 	}
 	closestLoc.insert(loc);	
+	loc1 = loc;
+
+	maxSim = -999;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
+			if(it->first != loc1){
+				maxSim = curSim;
+				loc = it->first;
+			}
+		}
+	}
+	closestLoc.insert(loc);	
+	loc2 = loc;
+
+	maxSim = -999;
+	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
+			if(it->first != loc1 && it->first != loc2){
+				maxSim = curSim;
+				loc = it->first;
+			}
+		}
+	}
+	closestLoc.insert(loc);	
+	loc3 = loc;
 }
 
 
@@ -335,7 +387,7 @@ int main(int argc, const char * argv[])
 		getline(lineStream, sigStrMed);
 		test_sigmac.push_back(pair<int,string> (atoi(sigStrMed.c_str()), macAdd));
 	}
-	cout << location << endl;
+	cout << location ;
 
         //Read all the <location, <x,y> > in a map data structure
 	map<string, pair<int, int> > locMap;
@@ -353,20 +405,24 @@ int main(int argc, const char * argv[])
 	PickStrongFingerprint(locSigMac, fingerprint, 10, 5);
 	PickStrongFingerprint(test_sigmac, test_fingerprint, 10, 5);
 	set<string> closestLoc;
-	SimKeyComparison(fingerprint, test_fingerprint, closestLoc);
+	keyComparison(fingerprint, test_fingerprint, closestLoc);
 
 	int x, y, floor;
 	double dis = BestPt(locMap, closestLoc, x, y, floor);
+	//cout << ',' << floor << endl;
+	
 	if(floor != 0){
 		double error = sqrt((locMap[location].first-x)*(locMap[location].first-x)+(locMap[location].second-y)*(locMap[location].second-y));
-		cout << floor << '\t' << error/sqrt(doorDisSquare) << '\t';
+		cout << ',' << error/sqrt(doorDisSquare) << endl;
+		/*
 		set<string>::iterator set_it;
 		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); set_it++)
 			cout << *set_it << "  ";
-		cout << endl;
+		cout << endl;*/
 	}else{
 		cout << "Cannot decide floor number" << endl;
-	}
+	}	
+	
 	return 0;
 }	
 
