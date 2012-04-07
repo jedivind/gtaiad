@@ -35,7 +35,7 @@ endif
 LIBPCAP		=
 
 SBINFILES       = aireplay-ng$(EXE) airodump-ng$(EXE) airserv-ng$(EXE) \
-		  airtun-ng$(EXE) airbase-ng$(EXE)
+		  airtun-ng$(EXE) airbase-ng$(EXE) airodump-ngm$(EXE)
 		  
 OPTFILES	= aircrack-ng-opt-prof_gen aircrack-ng-opt \
 		  aircrack-ng-opt-prof prof/*
@@ -72,7 +72,8 @@ ASM_AC		= sha1-sse2.S
 OBJS_AD		= airdecap-ng.o crypto.o common.o
 OBJS_PF		= packetforge-ng.o common.o crypto.o
 OBJS_AR		= aireplay-ng.o common.o crypto.o
-OBJS_ADU	= airodump-ng.o common.o crypto.o uniqueiv.o
+OBJS_ADU	= airodump-ng.o common.o crypto.o uniqueiv.o 
+OBJS_ADUM       = airodump-ngm.o common.o crypto.o uniqueiv.o 
 ifneq ($(OSNAME), Linux)
 	OBJS_ADU	+= osdep/common.o
 endif
@@ -153,6 +154,9 @@ aireplay-ng$(EXE): $(OBJS_AR) $(LIBOSD)
 
 airodump-ng$(EXE): $(OBJS_ADU) $(LIBOSD)
 	$(CC) $(CFLAGS) $(OBJS_ADU) -o $(@) $(LIBS) $(LIBSSL) -lpthread
+
+airodump-ngm$(EXE): $(OBJS_ADUM) $(LIBOSD)
+	$(CC) $(CFLAGS) $(OBJS_ADUM) -o $(@) $(LIBS) $(LIBSSL) -lpthread
 
 airserv-ng$(EXE): $(OBJS_AS) $(LIBOSD)
 	$(CC) $(CFLAGS) $(OBJS_AS) -o $(@) $(LIBS) $(LIBPCAP)

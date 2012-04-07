@@ -3,7 +3,8 @@
  *
  *  Copyright (C) 2006-2010 Thomas d'Otreppe
  *  Copyright (C) 2004, 2005 Christophe Devine
- *
+ *  Georgia Tech , Time to scan mods 2012 Paul Kippes, Vinay Bharadwaj
+ *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
