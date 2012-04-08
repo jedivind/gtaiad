@@ -26,7 +26,7 @@ int main(int argc, const char * argv[])
 		return 0;
 	}
 	string outfile = argv[1];
-	outfile.insert(outfile.size()-4, "_median"); //before ".csv" insert "_median" as part of file name
+	outfile.insert(outfile.size()-4, "_test_median"); //before ".csv" insert "_median" as part of file name
 	ifstream ifm(argv[1]);
 	ofstream ofm(outfile.c_str());
 	
@@ -75,11 +75,16 @@ int main(int argc, const char * argv[])
 		for(macSig_It = macSig.begin(); macSig_It != macSig.end(); macSig_It ++){
 			vector<int> & sigVec = macSig_It->second;
 			int median = *(sigVec.begin() + sigVec.size()/2);
+			/*
 			if(median >= medianCutOff && sigVec.size() >= frequencyCutOff){
 				ofm << locMacSig_It->first << ','
 			    	<< macSig_It->first << ','
 			    	<< median << endl;
-			}
+			}*/
+			ofm << locMacSig_It->first << ','
+			   <<macSig_It->first << ','
+			   << median << ','
+			  << sigVec.size() << endl;
 		}	
 	
 	}

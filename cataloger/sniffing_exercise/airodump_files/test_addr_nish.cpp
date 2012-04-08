@@ -344,6 +344,16 @@ void PickStrongFingerprint(vector<pair<int, string> >& vecSigMac, map<string, in
 		}
 }
 
+void computeMedian(map<string, vector<int> > & test_raw_data, vector<pair<int, string> > & test_sigmac)
+{
+	map<string, vector<int> >::iterator it;
+	for(it=test_raw_data.begin(); it!=test_raw_data.end(); ++it){
+		sort(it->second.begin(), it->second.end());
+		int median = *(it->second.begin() + it->second.size()/2);
+		test_sigmac.push_back(pair<int, string> (median, it->first));
+	}
+}
+
 int main(int argc, const char * argv[])
 {
 	if(argc != 4){
@@ -374,22 +384,21 @@ int main(int argc, const char * argv[])
 		locSigMac[location].push_back(pair<int, string> (atoi(sigStrMed.c_str()), macAdd) );		
 	}
 
-	//Here is to read the fingerprint for test location
 	vector<pair<int, string> > test_sigmac;
+	map<string, vector<int> > test_raw_data;
 	map<string, int> test_fingerprint;
-	string location;
 	while(getline(test_data, line)){
 		stringstream lineStream(line);
 		string macAdd;
-		string sigStrMed;
-		getline(lineStream, location, ',');
+		string sigStr;
 		getline(lineStream, macAdd, ',');
-		getline(lineStream, sigStrMed);
-		test_sigmac.push_back(pair<int,string> (atoi(sigStrMed.c_str()), macAdd));
+		getline(lineStream, sigStr);
+		test_raw_data[macAdd].push_back(atoi(sigStr.c_str()));
 	}
-	cout << location ;
 
-        //Read all the <location, <x,y> > in a map data structure
+	computeMedian(test_raw_data, test_sigmac);
+        
+	//Read all the <location, <x,y> > in a map data structure
 	map<string, pair<int, int> > locMap;
 	getline(loc_data, line); //ignore the header
 	while(getline(loc_data, line)){
@@ -409,19 +418,19 @@ int main(int argc, const char * argv[])
 
 	int x, y, floor;
 	double dis = BestPt(locMap, closestLoc, x, y, floor);
-	//cout << ',' << floor << endl;
-	
+	cout << floor << ',' << x << ',' << y << endl;
+	/*string location("2K004");
 	if(floor != 0){
 		double error = sqrt((locMap[location].first-x)*(locMap[location].first-x)+(locMap[location].second-y)*(locMap[location].second-y));
-		cout << ',' << error/sqrt(doorDisSquare) << endl;
-		/*
+		cout << error/sqrt(doorDisSquare) << endl;
+		
 		set<string>::iterator set_it;
 		for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); set_it++)
 			cout << *set_it << "  ";
-		cout << endl;*/
+		cout << endl;
 	}else{
 		cout << "Cannot decide floor number" << endl;
-	}	
+	}*/	
 	
 	return 0;
 }	
