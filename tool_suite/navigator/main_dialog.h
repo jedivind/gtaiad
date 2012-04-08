@@ -28,12 +28,13 @@ public slots:
 
 signals:
   void new_capture_canceled(void);
+  //void update_location_button(void);
   void new_capture_added(const QPoint&);
 
 private:
   bool validate_loc_id(void);
   void init_floor_scenes(void);
-  int run_airodump(void);
+  int run_airodump();
   void lily_code_execute(FILE*);
 
   //const QSqlDatabase& m_db;

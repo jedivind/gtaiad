@@ -25,7 +25,7 @@ class MapScene : public QGraphicsScene
 public:
   MapScene(const QString& map_filename, QObject* parent=0);
   void add_marker(const QString& loc_id, const QPointF& pos);
-  void set_marker_color(const QColor& color = Qt::black);
+  void set_marker_color(const QColor& color = Qt::red);
 
 signals:
 //  void location_selected(const QString& loc_id);

@@ -7,7 +7,7 @@ QT += sql
 # On OSX, do not place the executable in a bundle
 CONFIG -= app_bundle
 
-# CONFIG += debug
+CONFIG += debug
 
 #QMAKE_CLEAN += Makefile
 QMAKE_CLEAN += $(TARGET)

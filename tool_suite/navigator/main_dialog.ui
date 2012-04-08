@@ -141,13 +141,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="stop_navigation_button">
-           <property name="text">
-            <string>&amp;Stop Navigation</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -190,8 +183,6 @@
         </layout>
        </item>
       </layout>
-      <zorder></zorder>
-      <zorder></zorder>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
@@ -226,26 +217,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>stop_navigation_button</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>MainDialog</receiver>
-   <slot>setWindowModified(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>674</x>
-     <y>96</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>403</x>
-     <y>271</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>send_destination_button</sender>
    <signal>clicked()</signal>
    <receiver>MainDialog</receiver>
-   <slot>reject()</slot>
+   <slot>repaint()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>489</x>

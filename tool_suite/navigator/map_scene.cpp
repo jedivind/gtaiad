@@ -65,6 +65,8 @@ void MapScene::add_marker(const QString& loc_id, const QPointF& pos)
   m_markers_list.append(marker);
 
   addItem(marker);
+ // x_pos_label->setText(pos.x());
+ // y_pos_label->setText(pos.y());
 }
 
 void MapScene::set_marker_color(const QColor& color)
