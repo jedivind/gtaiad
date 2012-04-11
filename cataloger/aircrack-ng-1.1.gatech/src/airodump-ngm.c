@@ -1253,7 +1253,7 @@ int dump_add_packet( unsigned char *h80211, int caplen, struct rx_info *ri, int 
         for( i = 0; i < NB_PWR; i++ )
             ap_cur->power_lvl[i] = -1;
 
-        //ap_cur->channel    = -1;
+        ap_cur->channel    = -1;
         ap_cur->max_speed  = -1;
         ap_cur->security   = 0;
 
@@ -2452,15 +2452,10 @@ write_packet:
 
       if(h80211[0] == 0x80 && gatech_i_am_the_ap == 1)
       {
-        char buffer1[1001];
         char buffer[2001];
-        char time_buffer[100];
-        struct tm ltime;
 
-        //localtime_r(&ap_cur->tlast, &ltime);
-	
-        //memcpy(buffer1, ap_cur->essid, ap_cur->ssid_length);
-        //ap_cur->essid[ap_cur->ssid_length] = 0;
+
+        ap_cur->essid[ap_cur->ssid_length] = 0;
         if(ap_cur->essid[0] == 'G' && ap_cur->essid[1] == 'T'){
         
         snprintf(buffer, 1000,
