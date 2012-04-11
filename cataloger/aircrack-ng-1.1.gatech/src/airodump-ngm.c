@@ -2968,8 +2968,6 @@ void dump_print( int ws_row, int ws_col, int if_num )
               G.gps_loc[0], G.gps_loc[1], G.gps_loc[2], G.gps_loc[3],
               G.elapsed_time , 1900 + lt->tm_year,
               1 + lt->tm_mon, lt->tm_mday, lt->tm_hour, lt->tm_min );
-
-	
     }
     else
     {
@@ -3027,16 +3025,13 @@ void dump_print( int ws_row, int ws_col, int if_num )
     if(G.show_ap) {
   if(G.singlechan)
   {
-     // memcpy( strbuf, " BSSID              PWR RXQ  Beacons"
-     //     "    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID", columns_ap );
-
-      memcpy( strbuf, " BSSID              PWR"
-          "    CH ESSID", columns_ap );
+      memcpy( strbuf, " BSSID              PWR RXQ  Beacons"
+          "    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID", columns_ap );
   }
   else
   {
-      memcpy( strbuf, " BSSID              PWR"
-          "    CH ESSID", columns_ap );
+      memcpy( strbuf, " BSSID              PWR  Beacons"
+          "    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID", columns_ap );
   }
 
   strbuf[ws_col - 1] = '\0';
@@ -3111,52 +3106,52 @@ void dump_print( int ws_row, int ws_col, int if_num )
 
       if(G.singlechan)
       {
-    snprintf( strbuf+len, sizeof(strbuf)-len, "  %3d ",
-      ap_cur->avg_power);
-      //ap_cur->rx_quality,
-      //ap_cur->nb_bcn,
-      //ap_cur->nb_data,
-      //ap_cur->nb_dataps );
+    snprintf( strbuf+len, sizeof(strbuf)-len, "  %3d %3d %8ld %8ld %4d",
+      ap_cur->avg_power,
+      ap_cur->rx_quality,
+      ap_cur->nb_bcn,
+      ap_cur->nb_data,
+      ap_cur->nb_dataps );
       }
       else
       {
-    snprintf( strbuf+len, sizeof(strbuf)-len, "  %3d ",
-      ap_cur->avg_power);
-      //ap_cur->nb_bcn,
-      //ap_cur->nb_data,
-      //ap_cur->nb_dataps );
+    snprintf( strbuf+len, sizeof(strbuf)-len, "  %3d %8ld %8ld %4d",
+      ap_cur->avg_power,
+      ap_cur->nb_bcn,
+      ap_cur->nb_data,
+      ap_cur->nb_dataps );
       }
 
       len = strlen(strbuf);
 
-      snprintf( strbuf+len, sizeof(strbuf)-len, " %3d ",
-        ap_cur->channel);//, ap_cur->max_speed,
-        //( ap_cur->security & STD_QOS ) ? 'e' : ' ',
-        //( ap_cur->preamble ) ? '.' : ' ');
+      snprintf( strbuf+len, sizeof(strbuf)-len, " %3d %3d%c%c ",
+        ap_cur->channel, ap_cur->max_speed,
+        ( ap_cur->security & STD_QOS ) ? 'e' : ' ',
+        ( ap_cur->preamble ) ? '.' : ' ');
 
       len = strlen(strbuf);
 
-      //if( (ap_cur->security & (STD_OPN|STD_WEP|STD_WPA|STD_WPA2)) == 0) snprintf( strbuf+len, sizeof(strbuf)-len, "    " );
-      //else if( ap_cur->security & STD_WPA2 ) snprintf( strbuf+len, sizeof(strbuf)-len, "WPA2" );
-      //else if( ap_cur->security & STD_WPA  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WPA " );
-      //else if( ap_cur->security & STD_WEP  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP " );
-      //else if( ap_cur->security & STD_OPN  ) snprintf( strbuf+len, sizeof(strbuf)-len, "OPN " );
+      if( (ap_cur->security & (STD_OPN|STD_WEP|STD_WPA|STD_WPA2)) == 0) snprintf( strbuf+len, sizeof(strbuf)-len, "    " );
+      else if( ap_cur->security & STD_WPA2 ) snprintf( strbuf+len, sizeof(strbuf)-len, "WPA2" );
+      else if( ap_cur->security & STD_WPA  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WPA " );
+      else if( ap_cur->security & STD_WEP  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP " );
+      else if( ap_cur->security & STD_OPN  ) snprintf( strbuf+len, sizeof(strbuf)-len, "OPN " );
 
-      //strncat( strbuf, " ", sizeof(strbuf)-1);
+      strncat( strbuf, " ", sizeof(strbuf)-1);
 
-      //len = strlen(strbuf);
+      len = strlen(strbuf);
 
-      //if( (ap_cur->security & (ENC_WEP|ENC_TKIP|ENC_WRAP|ENC_CCMP|ENC_WEP104|ENC_WEP40)) == 0 ) snprintf( strbuf+len, sizeof(strbuf)-len, "       ");
-      //else if( ap_cur->security & ENC_CCMP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "CCMP   ");
-      //else if( ap_cur->security & ENC_WRAP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "WRAP   ");
-      //else if( ap_cur->security & ENC_TKIP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "TKIP   ");
-      //else if( ap_cur->security & ENC_WEP104 ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP104 ");
-      //else if( ap_cur->security & ENC_WEP40  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP40  ");
-      //else if( ap_cur->security & ENC_WEP    ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP    ");
+      if( (ap_cur->security & (ENC_WEP|ENC_TKIP|ENC_WRAP|ENC_CCMP|ENC_WEP104|ENC_WEP40)) == 0 ) snprintf( strbuf+len, sizeof(strbuf)-len, "       ");
+      else if( ap_cur->security & ENC_CCMP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "CCMP   ");
+      else if( ap_cur->security & ENC_WRAP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "WRAP   ");
+      else if( ap_cur->security & ENC_TKIP   ) snprintf( strbuf+len, sizeof(strbuf)-len, "TKIP   ");
+      else if( ap_cur->security & ENC_WEP104 ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP104 ");
+      else if( ap_cur->security & ENC_WEP40  ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP40  ");
+      else if( ap_cur->security & ENC_WEP    ) snprintf( strbuf+len, sizeof(strbuf)-len, "WEP    ");
 
-      //len = strlen(strbuf);
+      len = strlen(strbuf);
 
-      /*if( (ap_cur->security & (AUTH_OPN|AUTH_PSK|AUTH_MGT)) == 0 ) snprintf( strbuf+len, sizeof(strbuf)-len, "   ");
+      if( (ap_cur->security & (AUTH_OPN|AUTH_PSK|AUTH_MGT)) == 0 ) snprintf( strbuf+len, sizeof(strbuf)-len, "   ");
       else if( ap_cur->security & AUTH_MGT   ) snprintf( strbuf+len, sizeof(strbuf)-len, "MGT");
       else if( ap_cur->security & AUTH_PSK   )
       {
@@ -3166,7 +3161,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
         snprintf( strbuf+len, sizeof(strbuf)-len, "PSK");
       }
       else if( ap_cur->security & AUTH_OPN   ) snprintf( strbuf+len, sizeof(strbuf)-len, "OPN");
-*/
+
       len = strlen(strbuf);
 
       strbuf[ws_col-1] = '\0';
@@ -5422,12 +5417,11 @@ int main( int argc, char *argv[] )
     num_opts = i;
 
     for(i=0; i<argc; i++) //go through all arguments
-    {printf("%s\n", argv[i]);
-
+    {
         found = 0;
         if(strlen(argv[i]) >= 3)
         {
-	    if(argv[i][0] == '-' && argv[i][1] != '-')
+            if(argv[i][0] == '-' && argv[i][1] != '-')
             {
                 //we got a single dash followed by at least 2 chars
                 //lets check that against our long options to find errors
@@ -5812,15 +5806,13 @@ int main( int argc, char *argv[] )
                 return( 1 );
 
             case 'x':
-		
+
                 G.active_scan_sim = atoi(optarg);
 
                 if (G.active_scan_sim <= 0)
                     G.active_scan_sim = 0;
                 break;
 
-	
-	    
             default : goto usage;
         }
     } while ( 1 );
