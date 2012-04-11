@@ -70,7 +70,7 @@
 #include "osdep/common.h"
 #include "common.h"
 
-struct timeval tv_track;
+int time_limit_sec = 999999;
 int tv_track_flag = 0;
 
 
@@ -604,7 +604,7 @@ char usage[] =
 "      --showack           : Prints ack/cts/rts statistics\n"
 "      -h                  : Hides known stations for --showack\n"
 "      -f          <msecs> : Time in ms between hopping channels\n"
-"      -t 	    <secs> : Total time to scan\n"
+"      -t 	    <msecs> : Total time in ms to scan\n"
 "      --berlin     <secs> : Time before removing the AP/client\n"
 "                            from the screen when no more packets\n"
 "                            are received (Default: 120 seconds)\n"
@@ -2978,8 +2978,15 @@ void dump_print( int ws_row, int ws_col, int if_num )
               G.batt, G.elapsed_time, 1900 + lt->tm_year,
               1 + lt->tm_mon, lt->tm_mday, lt->tm_hour, lt->tm_min );
 	
-	if(tv_track_flag)
-	if(atoi(G.elapsed_time) > tv_track.tv_sec){fflush( stdout ); exit(0);}
+        if(tv_track_flag)
+            if(atoi(G.elapsed_time) > time_limit_sec)
+            {
+                fflush( stdout );
+                // Doesn't seem to help restore the console but remains parallel to original program
+                //fprintf( stderr, "\33[?25h" );
+                //fflush( stderr );
+                exit(0);
+            }
     }
 
     strncat(strbuf, buffer, (512-strlen(strbuf)));
@@ -5417,15 +5424,9 @@ int main( int argc, char *argv[] )
     for(i=0; i<argc; i++) //go through all arguments
     {printf("%s\n", argv[i]);
 
-	if(argv[i][0] == '-' && argv[i][1] == 't')
-		{
-		tv_track.tv_sec = argv[i][2];
-		tv_track_flag = 1;
-		}
-
         found = 0;
         if(strlen(argv[i]) >= 3)
-        { 
+        {
 	    if(argv[i][0] == '-' && argv[i][1] != '-')
             {
                 //we got a single dash followed by at least 2 chars
@@ -5658,6 +5659,12 @@ int main( int argc, char *argv[] )
                 G.chswitch = atoi(optarg);
                 break;
 
+            // GA Tech modification - limit time
+            case 't':
+                time_limit_sec = atoi(optarg) / 1000;
+                tv_track_flag = 1;
+                break;
+
             case 'u':
 
                 G.update_s = atoi(optarg);
@@ -5719,10 +5726,12 @@ int main( int argc, char *argv[] )
                 }
                 break;
 
+           /* GA Tech modification -- yer outta here!
             case 't':
 
                 set_encryption_filter(optarg);
                 break;
+            */
 
       case 'o':
 
