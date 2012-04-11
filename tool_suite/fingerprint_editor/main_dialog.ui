@@ -284,7 +284,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Channel</string>
+            <string>Ch</string>
            </property>
           </column>
           <column>
