@@ -30,6 +30,8 @@ MainDialog::MainDialog(QWidget* parent) : QDialog(parent),
   //zoom_slider->setSliderDown(true);
   update_floor_scale(zoom_slider->value());
 
+  destination_label->clear();
+
 #ifdef Q_WS_MAC
   map_view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 #endif

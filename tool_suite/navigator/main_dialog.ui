@@ -16,6 +16,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -59,7 +62,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0">
            <item>
             <widget class="QLabel" name="label_2">
              <property name="text">
@@ -68,7 +71,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="destination_label">
              <property name="maximumSize">
               <size>
                <width>349</width>
@@ -81,9 +84,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="send_destination_button">
+            <widget class="QPushButton" name="set_destination_button">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
-              <string>Send Destination</string>
+              <string>Set Destination</string>
              </property>
             </widget>
            </item>
@@ -217,22 +223,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>send_destination_button</sender>
-   <signal>clicked()</signal>
-   <receiver>MainDialog</receiver>
-   <slot>repaint()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>489</x>
-     <y>507</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>403</x>
-     <y>271</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>quit_button</sender>
    <signal>clicked()</signal>
    <receiver>MainDialog</receiver>
@@ -241,6 +231,22 @@
     <hint type="sourcelabel">
      <x>674</x>
      <y>508</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>403</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>set_destination_button</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>repaint()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>489</x>
+     <y>507</y>
     </hint>
     <hint type="destinationlabel">
      <x>403</x>
