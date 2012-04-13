@@ -1,14 +1,17 @@
 #include <assert.h>
+#include <sched.h>
 
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QDialog>
 #include <QLabel>
 
+#include <QApplication>
 #include <QMessageBox>
 #include <QPixmap>
 #include <QPointF>
 #include <QSqlQuery>
+#include <QTimer>
 #include <time.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -98,13 +101,27 @@ void MainDialog::update_location_clicked(void)
     //call code to run airodump and get the present location data.feed it into lily's code.
 
   m_scanning_dialog->show();
+  qApp->sendPostedEvents();
+  qApp->processEvents();
+  m_scanning_dialog->repaint();
+  qApp->flush();
+  qApp->sendPostedEvents();
+  qApp->processEvents();
+  m_scanning_dialog->repaint();
+  qApp->flush();
+  qApp->sendPostedEvents();
+  qApp->processEvents();
 
-    if(!run_airodump())
-    {
-      m_scanning_dialog->hide();
-      QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
-      return;
-    }
+  // TODO: I think at that the code from here to the end should be placed
+  // in a separate function/SLOT.  This function should be called in X ms
+  // using the QTimer::singleShot.
+
+  if(!run_airodump())
+  {
+    m_scanning_dialog->hide();
+    QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
+    return;
+  }
 
   m_scanning_dialog->hide();
 
