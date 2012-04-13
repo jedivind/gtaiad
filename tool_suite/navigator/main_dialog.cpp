@@ -61,16 +61,15 @@ void MainDialog::update_floor_scale(int scaling_factor)
 
 int MainDialog::run_airodump(void)
 {
-	int ret_1= system("ifconfig wlan0 down");
-	int ret_2 = system("iwconfig wlan0 mode monitor");
-	int ret_3 = system("ifconfig wlan0 up");
+	//int ret_1= system("ifconfig wlan0 down");
+	//int ret_2 = system("iwconfig wlan0 mode monitor");
+	//int ret_3 = system("ifconfig wlan0 up");
 	int ret_4 = system("./airodump-ngm -f 2000 -t 6000 --channel 1,6,11 -w test_data_median --output-format gatech wlan0");
 	//vinay's code.i
-	if(ret_1 && ret_2 && ret_3 && ret_4)
-	{
-	qDebug() << "returning";
-	return 1;
-	}
+	if(/* ret_1 && ret_2 && ret_3 && */ ret_4)
+    return 0;
+
+  return 1;
 }
 
 
@@ -83,13 +82,22 @@ void MainDialog::lily_code_execute(FILE* read_results)
 void MainDialog::update_location_clicked(void)
 {
 
-update_location_button->setEnabled(false);
-    //call code to run airodump and get the present location data.feed it into lily's code.
-    if(run_airodump())
+  // Don't disable button since our prototype system calls are blocking anyhow
+  //update_location_button->setEnabled(false);
 
-	system("ifconfig wlan0 down");
-	system("iwconfig wlan0 mode managed");
-	system("ifconfig wlan0 up");
+    //call code to run airodump and get the present location data.feed it into lily's code.
+
+  return;
+
+    if(!run_airodump())
+    {
+      QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
+      return;
+    }
+
+	//system("ifconfig wlan0 down");
+	//system("iwconfig wlan0 mode managed");
+	//system("ifconfig wlan0 up");
 	//run_airodump();
 	update_location_button->setEnabled(true);
     //wait(60);
@@ -138,8 +146,6 @@ update_location_button->setEnabled(false);
     present_position.setY(100.0);
     floor_number = 1;
     update_location_changed(present_position,floor_number,loc_id);
-    QMessageBox::warning(this, "Location",
-        "Updating for the first time.");
     //return;
   // TODO: perform AP capture magic
   // TODO: perform Database magic
