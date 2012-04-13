@@ -39,10 +39,9 @@ MainDialog::MainDialog(QWidget* parent) : QDialog(parent),
   // Remove dialog example data
   x_pos_label->clear();
   y_pos_label->clear();
- 
-    QObject::connect(update_location_button,SIGNAL(clicked()),this,SLOT(update_location_clicked()));
 
-
+  QObject::connect(update_location_button,SIGNAL(clicked()),this,SLOT(update_location_clicked()));
+  QObject::connect(zoom_slider, SIGNAL(sliderMoved(int)), this, SLOT(update_floor_scale(int)));
 }
 
 
@@ -88,7 +87,7 @@ update_location_button->setEnabled(false);
     //call code to run airodump and get the present location data.feed it into lily's code.
     if(run_airodump())
 
- 	system("ifconfig wlan0 down");
+	system("ifconfig wlan0 down");
 	system("iwconfig wlan0 mode managed");
 	system("ifconfig wlan0 up");
 	//run_airodump();
@@ -146,9 +145,6 @@ update_location_button->setEnabled(false);
   // TODO: perform Database magic
   //MapScene *map_scene = static_cast<MapScene*>(map_view->scene());
   //QObject::connect(this,SIGNAL(update_location_button()),this,SLOT(update_location_clicked()));
-  QObject::connect(zoom_slider, SIGNAL(sliderMoved(int)),
-        this, SLOT(update_floor_scale(int)));
-
 }
 
 void MainDialog::update_location_changed(const QPointF& present_position,int floor_number,const QString& loc_id)
@@ -156,11 +152,13 @@ void MainDialog::update_location_changed(const QPointF& present_position,int flo
 	//init_floor_scenes();
 	//update_floor_scale(1000);
 	change_floor(floor_number);
+  update_floor_scale(zoom_slider->value());
 	MapScene *mapscene = static_cast<MapScene*>(map_view->scene());
 	mapscene->add_marker(loc_id,present_position); //to add the marker to the position where the use is right now.
         x_pos_label->setNum(present_position.x());
         y_pos_label->setNum(present_position.y());
-
+  // Ensure this location is visible on the map
+  map_view->ensureVisible(present_position.x(), present_position.y(), 1, 1);
 }
 
 
