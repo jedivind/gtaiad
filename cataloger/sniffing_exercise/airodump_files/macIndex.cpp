@@ -15,6 +15,8 @@ using namespace std;
  *extract the new physical addresses(undiscovered before) and add them
  *<Mac Address, index> into the file mac_index.csv
  *Index starts from 1
+
+ *You have to make sure that mac_index.csv file already exists. If not, create it first.
  */ 
 int main(int argc, const char * argv[])
 {

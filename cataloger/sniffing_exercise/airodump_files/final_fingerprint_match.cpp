@@ -11,8 +11,6 @@
 
 using namespace std;
 
-const double ratio_epsilon = 0.000001;
-const double dis_epsilon = 1;
 const int doorDisSquare = (1167-1135)*(1167-1135)+(2180-2081)*(2180-2081); //between 2K008 and 2K009
 const int numDoors = 5;
 
@@ -115,59 +113,13 @@ double FindPointInCorridor(int cur_x, int cur_y, int & x, int & y){
 	return sqrt(minDisSquare);	
 } 
 
-/*
-This function return the number of common mac address and also set the value for ratio and aveDistance. 
-Ratio is (A intersect B)/(A union B). And the aveDistance is based on pairwise fingerprint.
-*/
-int keyCompare(const map<string, int> & ref, const map<string, int> & cur, double &ratio, double &aveDistance) 
-{
-	int numCommonStr = 0;
-	int distance = 0;
-	map<string, int>::const_iterator it1, it2, itt1, itt2;
-	for(it1=ref.begin(); it1!=ref.end(); it1++){
-		if((itt1 = cur.find(it1->first)) != cur.end()){
-			numCommonStr ++;
-			for(it2=it1, it2++; it2!=ref.end(); it2++){
-				if((itt2 = cur.find(it2->first)) != cur.end()){
-					int temp=((it1->second - it2->second)-(itt1->second-itt2->second));
-					distance += temp*temp;
-				}
-			}
-		}
-	}
-	ratio = numCommonStr*1.0/(ref.size()+cur.size()-numCommonStr);
-	aveDistance = sqrt(distance)/numCommonStr;
-	
-	return numCommonStr;
-					
-}
 
-void keyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, vector<string> & closestLoc)
-{
-	map<string, map<string, int> >::const_iterator it;
-	double maxRatio = 0, minDis = 9999;
-	double curRatio, curDis;
-	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
-		if(keyCompare(it->second, test_finger, curRatio, curDis) >= 3){
-			if((curRatio > maxRatio + ratio_epsilon) || (abs(curRatio-maxRatio)<ratio_epsilon && curDis<minDis-dis_epsilon)){
-				closestLoc.clear();
-				maxRatio = curRatio;
-				minDis = curDis;
-				closestLoc.push_back(it->first);
-			}
-			if(abs(curRatio-maxRatio) < ratio_epsilon && abs(curDis-minDis) < dis_epsilon){
-				closestLoc.push_back(it->first);
-				if(curDis < minDis) minDis = curDis;
-			}
-		}
-	}	
-}
-
-//This function return the aveDistance. 
+//This function return the aveDistance. Euclidean pairwise distance over all the common pairs
 double EuKeyCompare(const map<string, int> & ref, const map<string, int> & cur) 
 {
 	int numCommonStr = 0;
 	int distance = 0;
+	int numPairs = 0;
 	map<string, int>::const_iterator it1, it2, itt1, itt2;
 	for(it1=ref.begin(); it1!=ref.end(); it1++){
 		if((itt1 = cur.find(it1->first)) != cur.end()){
@@ -176,14 +128,16 @@ double EuKeyCompare(const map<string, int> & ref, const map<string, int> & cur)
 				if((itt2 = cur.find(it2->first)) != cur.end()){
 					int temp=((it1->second - it2->second)-(itt1->second-itt2->second));
 					distance += temp*temp;
+					numPairs ++;
 				}
 			}
 		}
 	}
-	return sqrt(distance)/numCommonStr;
+	if(numPairs > 0) return sqrt(distance/numPairs);
+	else return 9999999;
 }
 
-//Put the closest location in the vector<string> 
+//Put the closest three locations in the vector<string> with respect wo EuKeyCompare
 void EuKeyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, vector<string> & closestLoc)
 {
 	map<string, map<string, int> >::const_iterator it;
@@ -236,7 +190,7 @@ double SimKeyCompare(const map<string, int> & ref, const map<string, int> & cur)
 	return numCommonStr/(sqrt(ref.size())*sqrt(cur.size()));
 }
 
-//Put the closest location in the vector<string> 
+//Put the closest three locations in the vector<string> with respect to SimKeyCompare() 
 void SimKeyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, vector<string> & closestLoc)
 {
 	map<string, map<string, int> >::const_iterator it;
@@ -292,8 +246,9 @@ void FloorCleaning(vector<string> & closestLoc, int & floor){
 		for(vec_it=closestLoc.begin(); vec_it!=closestLoc.end();){
 			if((*vec_it).find("2K") != string::npos){
 				vec_it = closestLoc.erase(vec_it);
-			}else
+			}else{
 				++ vec_it;
+			}
 		}
 	}	
 	if(numFloorThree < numFloorTwo){
@@ -309,7 +264,7 @@ void FloorCleaning(vector<string> & closestLoc, int & floor){
 	if(numFloorThree == numFloorTwo) {floor = 0; cout << "Inaccessible place, error\n"; }
 }
 
-//Cleaning out those far away locations, assuming closestLoc has at most 3 elements
+//Cleaning out those far away locations, assuming closestLoc has at most 3 elements. An optimization here.
 void ClusterCleaning(map<string, pair<int, int> > & locMap, vector<string> & closestLoc){
 	if(closestLoc.size() <= 2) return;
 	//Now the case is only 3 elements
@@ -325,6 +280,7 @@ void ClusterCleaning(map<string, pair<int, int> > & locMap, vector<string> & clo
 	return;
 }
 
+//Given the closest locations, compute the centroid, if necessary, project it to the corridor
 double BestPt(map<string, pair<int, int> > & locMap, vector<string> & closestLoc, int & x, int & y){
 	int cur_x=0, cur_y=0;
 	vector<string>::iterator it;
@@ -336,9 +292,9 @@ double BestPt(map<string, pair<int, int> > & locMap, vector<string> & closestLoc
 	}
 	cur_x /= num;
 	cur_y /= num;
-	//if(num <= 3) { x = cur_x; y = cur_y;}
-	//else 
-	return FindPointInCorridor(cur_x, cur_y, x, y);
+	if(num <= 3) { x = cur_x; y = cur_y; return 0;}
+	//else actually return the distance between centroid and the projection on cooridor
+	else return FindPointInCorridor(cur_x, cur_y, x, y);
 }
 
 
@@ -366,6 +322,16 @@ void PickStrongFingerprint(vector<pair<int, string> >& vecSigMac, map<string, in
 		if(vecSigMac.front().first - vecSigMac[i].first <= maxDiff){
 			singleFingerprint[vecSigMac[i].second] = vecSigMac[i].first;
 		}
+}
+
+void computeMedian(map<string, vector<int> > & test_raw_data, vector<pair<int, string> > & test_sigmac)
+{
+        map<string, vector<int> >::iterator it;
+        for(it=test_raw_data.begin(); it!=test_raw_data.end(); ++it){
+                sort(it->second.begin(), it->second.end());
+                int median = *(it->second.begin() + it->second.size()/2);
+                test_sigmac.push_back(pair<int, string> (median, it->first));
+        }
 }
 
 int main(int argc, const char * argv[])
@@ -399,19 +365,20 @@ int main(int argc, const char * argv[])
 	}
 
 	//Here is to read the fingerprint for test location
-	vector<pair<int, string> > test_sigmac;
-	map<string, int> test_fingerprint;
-	string location;
-	while(getline(test_data, line)){
-		stringstream lineStream(line);
-		string macAdd;
-		string sigStrMed;
-		getline(lineStream, location, ',');
-		getline(lineStream, macAdd, ',');
-		getline(lineStream, sigStrMed);
-		test_sigmac.push_back(pair<int,string> (atoi(sigStrMed.c_str()), macAdd));
-	}
-	cout << location ;
+        vector<pair<int, string> > test_sigmac;
+        map<string, vector<int> > test_raw_data;
+        map<string, int> test_fingerprint;
+        while(getline(test_data, line)){
+                stringstream lineStream(line);
+                string macAdd;
+                string sigStr;
+                getline(lineStream, macAdd, ',');
+                getline(lineStream, sigStr);
+                test_raw_data[macAdd].push_back(atoi(sigStr.c_str()));
+        }
+
+        computeMedian(test_raw_data, test_sigmac);
+
 
         //Read all the <location, <x,y> > in a map data structure
 	map<string, pair<int, int> > locMap;
@@ -433,7 +400,6 @@ int main(int argc, const char * argv[])
 	int floor;
 	FloorCleaning(closestLoc, floor);
 	ClusterCleaning(locMap, closestLoc); 
-	cout << " ";
 	/*
 	vector<string>::iterator vec_it;
 	for(vec_it=closestLoc.begin(); vec_it!=closestLoc.end(); vec_it++)
@@ -443,20 +409,8 @@ int main(int argc, const char * argv[])
 
 	int x, y;
 	double dis = BestPt(locMap, closestLoc, x, y);
-	//cout << ',' << floor;
-	
-	if(floor != 0){
-		double error = sqrt((locMap[location].first-x)*(locMap[location].first-x)+(locMap[location].second-y)*(locMap[location].second-y));
-		cout << ',' << error/sqrt(doorDisSquare) << endl;
+	cout << floor << ',' << x << ',' << y << endl;
 		
-		//set<string>::iterator set_it;
-		//for(set_it=closestLoc.begin(); set_it!=closestLoc.end(); set_it++)
-			//cout << *set_it << "  ";
-		//cout << endl;
-	}else{
-		cout << "Cannot decide floor number" << endl;
-	}	
-	
 	return 0;
 }	
 
