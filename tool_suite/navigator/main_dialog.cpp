@@ -1,6 +1,10 @@
 #include <assert.h>
 
 #include <QDebug>
+#include <QHBoxLayout>
+#include <QDialog>
+#include <QLabel>
+
 #include <QMessageBox>
 #include <QPixmap>
 #include <QPointF>
@@ -40,8 +44,14 @@ MainDialog::MainDialog(QWidget* parent) : QDialog(parent),
   x_pos_label->clear();
   y_pos_label->clear();
 
+  // Give us something interseting to look at
+  MapScene* dangling_map_scene = new MapScene("logo-georgia.gif");
+  map_view->setScene(dangling_map_scene);
+
   QObject::connect(update_location_button,SIGNAL(clicked()),this,SLOT(update_location_clicked()));
   QObject::connect(zoom_slider, SIGNAL(sliderMoved(int)), this, SLOT(update_floor_scale(int)));
+
+  m_scanning_dialog = doing_scan_dialog(this);
 }
 
 
@@ -87,13 +97,16 @@ void MainDialog::update_location_clicked(void)
 
     //call code to run airodump and get the present location data.feed it into lily's code.
 
-  return;
+  m_scanning_dialog->show();
 
     if(!run_airodump())
     {
+      m_scanning_dialog->hide();
       QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
       return;
     }
+
+  m_scanning_dialog->hide();
 
 	//system("ifconfig wlan0 down");
 	//system("iwconfig wlan0 mode managed");
@@ -197,4 +210,23 @@ void MainDialog::change_floor(int floor_number)
 
   // Change focus to any place other than the QComboBox
   map_view->setFocus();
+}
+
+QDialog* MainDialog::doing_scan_dialog(QWidget* parent)
+{
+  QDialog* dialog = new QDialog(parent);
+  QHBoxLayout* layout = new QHBoxLayout;
+  QPixmap gt_logo_pixmap = QPixmap("logo-georgia.gif");
+  gt_logo_pixmap = gt_logo_pixmap.scaledToWidth(100);
+  QLabel* gt_logo = new QLabel;
+  QLabel* text = new QLabel("WIFI scan in progress...");
+
+  gt_logo->setPixmap(gt_logo_pixmap);
+  layout->addWidget(gt_logo);
+  layout->addWidget(text);
+
+  dialog->setLayout(layout);
+  dialog->setWindowModality(Qt::ApplicationModal);
+
+  return dialog;
 }

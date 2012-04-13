@@ -24,7 +24,8 @@ MapScene::MapScene(const QString& map_filename, QObject* parent) : QGraphicsScen
   QGraphicsPixmapItem* pixmap_item_ptr;
 
   pixmap_item_ptr = addPixmap(floor_pixmap);
-  pixmap_item_ptr->setOpacity(0.4);
+  if (map_filename != "logo-georgia.gif")
+    pixmap_item_ptr->setOpacity(0.4);
 }
 
 // slot: called when user clicks the 'cancel' button in the new capture

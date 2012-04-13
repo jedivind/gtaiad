@@ -36,11 +36,13 @@ private:
   void init_floor_scenes(void);
   int run_airodump();
   void lily_code_execute(FILE*);
+  QDialog* doing_scan_dialog(QWidget* parent);
 
   //const QSqlDatabase& m_db;
   char *return_value;
   QStringList m_floor_image_filenames;
   QList<MapScene*> m_map_scenes;
+  QDialog* m_scanning_dialog;
 };
 
 #endif
