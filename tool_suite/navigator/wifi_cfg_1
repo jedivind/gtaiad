@@ -1,0 +1,6 @@
+# Stop any network services
+sudo /etc/init.d/network-manager stop
+sudo service avahi-daemon stop
+echo IF ANY PROCESSES ARE LISTED AS RUNNING...KILL THEM
+ps ax | grep dhclient
+ps ax | grep wpa_supplicant

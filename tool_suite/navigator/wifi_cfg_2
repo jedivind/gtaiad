@@ -1,0 +1,5 @@
+# Configure the wifi device
+sudo ifconfig wlan0 down
+sudo iwconfig wlan0 mode monitor
+sudo ifconfig wlan0 up
+sudo airmon-ng start wlan0
