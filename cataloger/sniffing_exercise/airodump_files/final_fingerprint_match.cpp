@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <set>
+#include<string.h>
 
 using namespace std;
 
@@ -346,7 +347,7 @@ int main(int argc, const char * argv[])
      * test_data_median.csv - location fingerprint
      * locations.csv  - the file which stores all the coordinates for each location
      */
-		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.gatech.csv "<< " locations.csv" << endl;
+		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.gatech-01.csv "<< " locations.csv" << endl;
 		return 0;
 	}
 	ifstream data(argv[1]);
@@ -413,8 +414,17 @@ int main(int argc, const char * argv[])
 	
 
 	int x, y;
+	char buffer[20];
 	double dis = BestPt(locMap, closestLoc, x, y);
-	cout << floor << ',' << x << ',' << y << endl;
+	cout << floor << ',' << x << ',' << y <<endl;
+
+	//code added by nishith
+	sprintf(buffer,"%d,%d,%d",floor,x,y);
+        cout << buffer;
+	FILE *fb;
+	fb = fopen("loc","w");
+	fwrite(buffer,strlen(buffer)*sizeof(char),1,fb);
+	fclose(fb);
 		
 	return 0;
 }	
