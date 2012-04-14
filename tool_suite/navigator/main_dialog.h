@@ -23,7 +23,7 @@ public:
 public slots:
   void update_floor_scale(int scaling_factor);   // Set scale to 1/scaling_factor
   void update_location_clicked(void);  //when the user clicks update location.
-  void update_location_changed(const QPointF&,int,const QString&);
+  void update_location_changed(const QPointF&,int);//,const QString&);
   void change_floor(int image_index);
   void run_airodump(void);
 
@@ -35,11 +35,12 @@ signals:
 private:
   bool validate_loc_id(void);
   void init_floor_scenes(void);
-  void lily_code_execute(FILE*);
+  void lily_code_execute();
   QDialog* doing_scan_dialog(QWidget* parent);
 
   //const QSqlDatabase& m_db;
   char *return_value;
+  FILE *read_results;
   QStringList m_floor_image_filenames;
   QList<MapScene*> m_map_scenes;
   QDialog* m_scanning_dialog;

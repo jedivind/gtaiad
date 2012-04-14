@@ -91,11 +91,11 @@ void MainDialog::run_airodump(void)
   process_airodump();
 }
 
-void MainDialog::lily_code_execute(FILE* read_results)
+/*void MainDialog::lily_code_execute()
 {
-	read_results = popen("./lilcode","r");
+	read_results = fopen("loc","r");
 	fread(return_value,sizeof(char),100,read_results);
-}
+}*/
 
 void MainDialog::update_location_clicked(void)
 {
@@ -111,19 +111,29 @@ void MainDialog::update_location_clicked(void)
 
 void MainDialog::process_airodump(void)
 {
-    FILE *read_results;
+    //FILE *read_results;
     //present_location_data = run_airodump();
     //call lily's code and other map refreshing code.
-    //lily_code_execute(read_results);
+    //lily_code_execute();
+     //read_results = popen("./final_fingerprint_match lh_all_data_median.csv test_data_median-01.gatech.csv locations.csv","r");
+     //fread(return_value,sizeof(char),100,read_results);
+     //qDebug() << return_value;
     //parse the return value
-    char buffer[100];
-    QString loc_id;
+    char buffer[200];
+    //QString loc_id;
     int xpos,ypos,floor_number;
     bool x_pos,y_pos;
-    /*while(fgets(buffer,100,read_results)!=NULL)
+    read_results = fopen("loc","r");
+    while(fgets(buffer,100,read_results)!=NULL)
 	{
+	//qDebug() << buffer;
+	sscanf(buffer,"%d,%d,%d" , &floor_number,&xpos,&ypos);
+
         int length = strlen(buffer);
-        while(length!=0)
+        //qDebug() << floor_number;
+	//qDebug() << x_pos;
+	//qDebug() << y_pos;
+       /*while(length!=0)
         {
         if(buffer[length] == ',' && y_pos==false)
 		{
@@ -137,24 +147,25 @@ void MainDialog::process_airodump(void)
 		}
         if(length == 1)
 		{
-		int floor = (int)buffer[length] - 48; 
+		floor_number = (int)buffer[length] - 48; 
 		break;
 		}
+	length--;
     	//get from lily's code
 	//location; 
-	}
+	}*/
 	}	
 	QPointF present_position;
 	present_position.setX(xpos);
         present_position.setY(ypos);
-        x_pos_label->setText((QString)xpos);
-        y_pos_label->setText((QString)ypos);
+        //x_pos_label->setText((QString)xpos);
+        //y_pos_label->setText((QString)ypos);
     // = get_measurement_locations_from_DB(present_location_data); */
-    QPointF present_position;
-    present_position.setX(1710.0);
-    present_position.setY(2328.0);
-    floor_number = 2;
-    update_location_changed(present_position,floor_number,loc_id);
+    //QPointF present_position;
+    //present_position.setX(1710.0);
+    //present_position.setY(2328.0);
+    //floor_number = 2;
+    update_location_changed(present_position,floor_number);
     //return;
   // TODO: perform AP capture magic
   // TODO: perform Database magic
@@ -162,14 +173,15 @@ void MainDialog::process_airodump(void)
   //QObject::connect(this,SIGNAL(update_location_button()),this,SLOT(update_location_clicked()));
 }
 
-void MainDialog::update_location_changed(const QPointF& present_position,int floor_number,const QString& loc_id)
+void MainDialog::update_location_changed(const QPointF& present_position,int floor_number)
 {
 	//init_floor_scenes();
 	//update_floor_scale(1000);
+        QString loc_id;
 	change_floor(floor_number);
   update_floor_scale(zoom_slider->value());
 	MapScene *mapscene = static_cast<MapScene*>(map_view->scene());
-	mapscene->set_marker(loc_id,present_position); //to add the marker to the position where the use is right now.
+	mapscene->set_marker(present_position); //to add the marker to the position where the use is right now.
         x_pos_label->setNum(present_position.x());
         y_pos_label->setNum(present_position.y());
   // Ensure this location is visible on the map

@@ -4,12 +4,12 @@
 
 #include "map_scene.h"
 
-PermanentMarker::PermanentMarker(const QRectF& rect,
+/*PermanentMarker::PermanentMarker(const QRectF& rect,
     const QString& loc_id, QGraphicsEllipseItem* parent) : QGraphicsEllipseItem(rect, parent)
 {
   m_loc_id = loc_id;
   setToolTip(m_loc_id);
-}
+}*/
 
 // ***************************************************************************
 
@@ -52,7 +52,7 @@ MapScene::MapScene(const QString& map_filename, QObject* parent) : QGraphicsScen
   }
 }
 */
-void MapScene::set_marker(const QString& loc_id, const QPointF& pos)
+void MapScene::set_marker(const QPointF& pos)
 {
   int i_diameter = qFloor(qSqrt(((int(height()) << 1) + (int(width()) << 1))) + 0.5);
   float diameter;
@@ -94,8 +94,8 @@ void MapScene::set_marker(const QString& loc_id, const QPointF& pos)
 
 
 #ifdef NONO
-  PermanentMarker* marker = new PermanentMarker(
-      QRectF(pos.x()-diameter/2, pos.y()-diameter/2, diameter, diameter), loc_id);
+ /* PermanentMarker* marker = new PermanentMarker(
+      QRectF(pos.x()-diameter/2, pos.y()-diameter/2, diameter, diameter), loc_id);*/
 
   marker->setBrush(QBrush(m_permanent_marker_color));
 

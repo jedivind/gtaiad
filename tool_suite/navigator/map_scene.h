@@ -9,14 +9,6 @@
 #include <QList>
 #include <QGraphicsEllipseItem>
 
-// structure holding information to represent the measurement locations
-class PermanentMarker : public QGraphicsEllipseItem
-{
-public:
-  PermanentMarker(const QRectF& rect, const QString& loc_id, QGraphicsEllipseItem* parent=0);
-
-  QString m_loc_id;
-};
 
 class MapScene : public QGraphicsScene
 {
@@ -24,7 +16,7 @@ class MapScene : public QGraphicsScene
 
 public:
   MapScene(const QString& map_filename, QObject* parent=0);
-  void set_marker(const QString& loc_id, const QPointF& pos);
+  void set_marker(const QPointF& pos);
 
 signals:
 //  void location_selected(const QString& loc_id);

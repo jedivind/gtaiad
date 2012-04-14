@@ -341,7 +341,7 @@ int main(int argc, const char * argv[])
      * test_data_median.csv - location fingerprint
      * locations.csv  - the file which stores all the coordinates for each location
      */
-		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median.gatech.csv "<< " locations.csv" << endl;
+		cout << "Usage: " << argv[0] << "  some_median.csv" << "  test_data_median-01.gatech.csv "<< " locations.csv" << endl;
 		return 0;
 	}
 	ifstream data(argv[1]);
