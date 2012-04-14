@@ -26,7 +26,7 @@ int main(int argc, const char * argv[])
 		return 0;
 	}
 	string outfile = argv[1];
-	outfile.insert(outfile.size()-4, "__median"); //before ".csv" insert "_median" as part of file name
+	outfile.insert(outfile.size()-4, "_median"); //before ".csv" insert "_median" as part of file name
 	ifstream ifm(argv[1]);
 	ofstream ofm(outfile.c_str());
 	
