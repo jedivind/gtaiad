@@ -71,20 +71,25 @@ void MainDialog::update_floor_scale(int scaling_factor)
   map_view->scale(100.0/scaling_factor, 100.0/scaling_factor);
 }
 
-
-int MainDialog::run_airodump(void)
+void MainDialog::run_airodump(void)
 {
-	//int ret_1= system("ifconfig wlan0 down");
-	//int ret_2 = system("iwconfig wlan0 mode monitor");
-	//int ret_3 = system("ifconfig wlan0 up");
-	int ret_4 = system("./airodump-ngm -f 2000 -t 6000 --channel 1,6,11 -w test_data_median --output-format gatech wlan0");
-	//vinay's code.i
-	if(/* ret_1 && ret_2 && ret_3 && */ ret_4)
-    return 0;
+	int ret = system("./airodump-ngm -f 2000 -t 6000 --channel 1,6,11 -w test_data_median --output-format gatech wlan0");
 
-  return 1;
+	if(ret)
+  {
+    /* bad result */
+    m_scanning_dialog->hide();
+    QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
+
+    return;
+  }
+
+  /* good result */
+
+  m_scanning_dialog->hide();
+
+  process_airodump();
 }
-
 
 void MainDialog::lily_code_execute(FILE* read_results)
 {
@@ -94,44 +99,18 @@ void MainDialog::lily_code_execute(FILE* read_results)
 
 void MainDialog::update_location_clicked(void)
 {
-
   // Don't disable button since our prototype system calls are blocking anyhow
   //update_location_button->setEnabled(false);
 
-    //call code to run airodump and get the present location data.feed it into lily's code.
+  //call code to run airodump and get the present location data.feed it into lily's code.
 
   m_scanning_dialog->show();
-  qApp->sendPostedEvents();
-  qApp->processEvents();
-  m_scanning_dialog->repaint();
-  qApp->flush();
-  qApp->sendPostedEvents();
-  qApp->processEvents();
-  m_scanning_dialog->repaint();
-  qApp->flush();
-  qApp->sendPostedEvents();
-  qApp->processEvents();
 
-  // TODO: I think at that the code from here to the end should be placed
-  // in a separate function/SLOT.  This function should be called in X ms
-  // using the QTimer::singleShot.
+  QTimer::singleShot(100, this, SLOT(run_airodump()));
+}
 
-  if(!run_airodump())
-  {
-    m_scanning_dialog->hide();
-    QMessageBox::warning(this, "Error", "Error returned from wifi scanner.");
-    return;
-  }
-
-  m_scanning_dialog->hide();
-
-	//system("ifconfig wlan0 down");
-	//system("iwconfig wlan0 mode managed");
-	//system("ifconfig wlan0 up");
-	//run_airodump();
-	update_location_button->setEnabled(true);
-    //wait(60);
-    //update the popup boxes.
+void MainDialog::process_airodump(void)
+{
     FILE *read_results;
     //present_location_data = run_airodump();
     //call lily's code and other map refreshing code.

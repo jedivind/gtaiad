@@ -25,6 +25,7 @@ public slots:
   void update_location_clicked(void);  //when the user clicks update location.
   void update_location_changed(const QPointF&,int,const QString&);
   void change_floor(int image_index);
+  void run_airodump(void);
 
 signals:
   void new_capture_canceled(void);
@@ -34,7 +35,6 @@ signals:
 private:
   bool validate_loc_id(void);
   void init_floor_scenes(void);
-  int run_airodump();
   void lily_code_execute(FILE*);
   QDialog* doing_scan_dialog(QWidget* parent);
 
@@ -43,6 +43,7 @@ private:
   QStringList m_floor_image_filenames;
   QList<MapScene*> m_map_scenes;
   QDialog* m_scanning_dialog;
+  void process_airodump(void);
 };
 
 #endif
