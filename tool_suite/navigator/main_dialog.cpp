@@ -151,9 +151,9 @@ void MainDialog::process_airodump(void)
         y_pos_label->setText((QString)ypos);
     // = get_measurement_locations_from_DB(present_location_data); */
     QPointF present_position;
-    present_position.setX(100.0);
-    present_position.setY(100.0);
-    floor_number = 1;
+    present_position.setX(1710.0);
+    present_position.setY(2328.0);
+    floor_number = 2;
     update_location_changed(present_position,floor_number,loc_id);
     //return;
   // TODO: perform AP capture magic
@@ -169,11 +169,12 @@ void MainDialog::update_location_changed(const QPointF& present_position,int flo
 	change_floor(floor_number);
   update_floor_scale(zoom_slider->value());
 	MapScene *mapscene = static_cast<MapScene*>(map_view->scene());
-	mapscene->add_marker(loc_id,present_position); //to add the marker to the position where the use is right now.
+	mapscene->set_marker(loc_id,present_position); //to add the marker to the position where the use is right now.
         x_pos_label->setNum(present_position.x());
         y_pos_label->setNum(present_position.y());
   // Ensure this location is visible on the map
-  map_view->ensureVisible(present_position.x(), present_position.y(), 1, 1);
+  //map_view->ensureVisible(present_position.x(), present_position.y(), 1, 1);
+  map_view->centerOn(present_position.x(), present_position.y());
 }
 
 

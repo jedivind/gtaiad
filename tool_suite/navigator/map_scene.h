@@ -24,18 +24,18 @@ class MapScene : public QGraphicsScene
 
 public:
   MapScene(const QString& map_filename, QObject* parent=0);
-  void add_marker(const QString& loc_id, const QPointF& pos);
-  void set_marker_color(const QColor& color = Qt::red);
+  void set_marker(const QString& loc_id, const QPointF& pos);
 
 signals:
 //  void location_selected(const QString& loc_id);
 
 private:
 
-  QGraphicsEllipseItem* m_pending_capture_loc_ellipseitem_ptr;
+#ifdef NONO
   QColor m_permanent_marker_color;
-  QGraphicsItemGroup* m_markers_group;   // Permanent markers
-  QList<PermanentMarker*> m_markers_list; //maintain a list of older positions of the user.
+#endif
+  QGraphicsEllipseItem* m_location_dot_ptr;
+  QGraphicsEllipseItem* m_location_ring_ptr;
 };
 
 #endif
