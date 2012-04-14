@@ -291,6 +291,7 @@ double BestPt(map<string, pair<int, int> > & locMap, vector<string> & closestLoc
 	int cur_x=0, cur_y=0;
 	vector<string>::iterator it;
 	int num = closestLoc.size();
+  if (num==0) { x=0, y=0; return 0; }
 	for(it=closestLoc.begin(); it!=closestLoc.end(); ++it){
 		pair<int, int> temp = locMap[*it];
 		cur_x += temp.first;
