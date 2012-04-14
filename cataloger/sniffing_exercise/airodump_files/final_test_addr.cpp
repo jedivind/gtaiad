@@ -390,12 +390,12 @@ int main(int argc, const char * argv[])
 	FloorCleaning(closestLoc, floor);
 	ClusterCleaning(locMap, closestLoc); 
 	cout << " ";
-	/*
+	
 	vector<string>::iterator vec_it;
 	for(vec_it=closestLoc.begin(); vec_it!=closestLoc.end(); vec_it++)
 		cout << *vec_it << "  ";
 	cout << endl;
-	*/
+	
 
 	int x, y;
 	double dis = BestPt(locMap, closestLoc, x, y);

@@ -26,107 +26,6 @@ void printLoc(const map<string, map<string, int> > & fingerprint, string locatio
 
 }
 
-//Given the fingerprints for two location, compute the Euclidean distance
-//  location_fingerprint = map< MAC_ADDRESS, MEDIAN_SIGNAL_STRENGTH >
-double distanceFing_No_Diff(const map<string, int> & fing1, const map<string, int> & fing2)
-{
-	int res = 0;
-	map<string, int>::const_iterator it1, it2;
-	int weakestFing1 = 0, weakestFing2 = 0;
-	int num=0;
-	for(it1 = fing1.begin(); it1 != fing1.end(); it1 ++){
-		if(weakestFing1 > it1->second)
-			weakestFing1 = it1->second;
-	}
-	
-	for(it2 = fing2.begin(); it2 != fing2.end(); it2 ++){
-		if(weakestFing2 > it2->second)
-			weakestFing2 = it2->second;
-	}
-	
-	for(it1 = fing1.begin(); it1 != fing1.end(); it1 ++){
-		it2 = fing2.find(it1->first);
-		if(it2 != fing2.end())//common mac address
-			res += (it1->second-it2->second)*(it1->second-it2->second);
-		else
-			res += (it1->second-weakestFing1)*(it1->second-weakestFing1);
-		num ++;
-	}
-	for(it2 = fing2.begin(); it2 != fing2.end(); it2++){
-		if(fing1.find(it2->first) == fing1.end()){
-			res += (it2->second-weakestFing2)*(it2->second-weakestFing2);
-			num ++;
-		}
-	}
-	return sqrt(res*1.0/num);	
-}
-
-double pairwiseDis(map<string, pair<int, int> > & fingpair)
-{
-	map<string, pair<int, int> >::const_iterator it1, it2;
-	int res = 0;
-	int num = 0;
-	for(it1 = fingpair.begin(); it1 != fingpair.end(); it1 ++)
-		for(it2=it1, it2++; it2 != fingpair.end(); it2 ++){
-			int temp = (it1->second.first-it2->second.first)-(it1->second.second-it2->second.second);
-			res += temp*temp;
-			num ++;
-		}
-	return sqrt(res * 1.0/num);
-
-} 
-//Using difference between a pair of AP, instead of absolute values
-double distanceFing_Diff(const map<string, int> & fing1, const map<string, int> & fing2)
-{
-	map<string, int>::const_iterator it1, it2;
-	int weakestFing1 = 0, weakestFing2 = 0;
-	for(it1 = fing1.begin(); it1 != fing1.end(); it1 ++){
-		if(weakestFing1 > it1->second)
-			weakestFing1 = it1->second;
-	}
-	
-	for(it2 = fing2.begin(); it2 != fing2.end(); it2 ++){
-		if(weakestFing2 > it2->second)
-			weakestFing2 = it2->second;
-	}
-	
-	map<string, pair<int, int> > fingpair;
-	
-	for(it1 = fing1.begin(); it1 != fing1.end(); it1 ++){
-		fingpair[it1->first].first = it1->second;
-		fingpair[it1->first].second = weakestFing2;
-	}
-	
-	for(it2 = fing2.begin(); it2 != fing2.end(); it2++){
-		if(fingpair.find(it2->first) == fingpair.end()){
-			fingpair[it2->first].first = weakestFing1;
-			fingpair[it2->first].second = it2->second;
-		}else{
-			fingpair[it2->first].second = it2->second;
-		}
-	}
-	return pairwiseDis(fingpair);	
-}
-
-
-void printFingerprint(map<string, map<string, int> > & fingerprint){
-	//ofstream os("temp_03_09_2.csv");
-	map<string, map<string, int> >::const_iterator finger_It1, finger_It2;	
-	
-	//print first row, the labels
-	cout << ',';
-	for(finger_It1 = fingerprint.begin(); finger_It1 != fingerprint.end(); finger_It1 ++)
-		cout << finger_It1->first << ',';
-	cout << endl;
-
-	for(finger_It1 = fingerprint.begin(); finger_It1 != fingerprint.end(); finger_It1 ++){
-		cout << finger_It1->first << ',';
-		for(finger_It2 = fingerprint.begin(); finger_It2 != fingerprint.end(); finger_It2 ++)
-			cout<< distanceFing_No_Diff(finger_It1->second, finger_It2->second) << ',';
-		cout << endl;
-	}
-}
-
 //output all the pairs <locationID, #(access points captured) 
 void printLocNumAP(map<string, map<string, int> > & fingerprint){
 	map<string, map<string, int> >::const_iterator finger_It;	
@@ -141,7 +40,6 @@ bool mySigMacidCompare(const pair<int, int> & p1, const pair<int, int> & p2){
 }
 
 void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int maxNum, int maxDiff){
-	map<int, set<string> > macIdLocCluster;
 	map<string, vector<pair<int, int> > >::iterator it;
 	for(it=locSigMacid.begin(); it != locSigMacid.end(); it++){
 		vector<pair<int, int> > & v = it->second;
@@ -150,47 +48,9 @@ void clusterFingerprint(map<string, vector<pair<int, int> > > & locSigMacid, int
 		for(int i=0; i<maxNum && i<v.size(); i++)
 			if(v.front().first - v[i].first <= maxDiff){
 				cout << v[i].second << ",";
-				macIdLocCluster[v[i].second].insert(it->first);
 			}
 		cout << endl;
 	}
-	
-	map<int, set<string> >::iterator it1, it2, it3;
-	map<set<string>, set<int> > clusterMac;
-	for(it1 = macIdLocCluster.begin(); it1 != macIdLocCluster.end(); it1 ++){
-		for(it2 = it1, it2 ++; it2 != macIdLocCluster.end(); it2 ++){
-			for(it3 = it2, it3++; it3 != macIdLocCluster.end(); it3 ++){
-				set<string> temp, cluster;
-				set_intersection(it1->second.begin(), it1->second.end(), it2->second.begin(),
-						it2->second.end(), inserter(temp, temp.begin()));
-			 	set_intersection(temp.begin(), temp.end(), it3->second.begin(),
-						it3->second.end(), inserter(cluster, cluster.begin()));
-				if(cluster.size() > 2){
-					cout << it1->first << "," << it2->first << "," << it3->first << ",";
-					set<string>::iterator it;
-					for(it = cluster.begin(); it != cluster.end(); it ++)
-						cout << *it << ",";
-					cout << endl;
-					clusterMac[cluster].insert(it1->first);
-					clusterMac[cluster].insert(it2->first);
-					clusterMac[cluster].insert(it3->first);
-				}
-			}
-		}
-	}
-
-	map<set<string>, set<int> > :: iterator mssIt;
-	for(mssIt=clusterMac.begin(); mssIt != clusterMac.end(); mssIt ++){
-		set<string> :: iterator sit1;
-		set<int> :: iterator sit2;
-		for(sit1=mssIt->first.begin(); sit1!=mssIt->first.end(); sit1++)
-			cout << *sit1 << ",";
-		cout << "\t";
-		for(sit2=mssIt->second.begin(); sit2!=mssIt->second.end(); sit2++)
-			cout << *sit2 << ", ";
-		cout << endl;
-	}
-	
 }
 
 //Load the mac_Index.csv file (contains <mac, index>)  into a map structure 
@@ -206,28 +66,6 @@ void LoadMacIndex(map<string, int> & macIndexMap, ifstream & in)
 		macIndexMap[macAdd] = atoi(index.c_str());
 	}
 }
-
-void printCommonMac(map<string, vector<pair<int, int> > > & locSigMacid){
-	map<string, vector<pair<int, int> > > :: iterator it, jt;
-	it = locSigMacid.begin();
-	vector<pair<int, int> >::iterator vit=(it->second).begin(), vjt;
-	for(; vit != (it->second).end(); vit++){
-		int mac=vit->second;
-		for(jt=locSigMacid.begin(); jt!=locSigMacid.end(); jt++){
-			vjt=(jt->second).begin();
-			for(; vjt!=(jt->second).end(); vjt++){
-				if(vjt->second == mac) break;
-			}
-			if(vjt == (jt->second).end()) 
-				break;
-		}
-		if(jt == locSigMacid.end()){
-			cout << mac << " is a common mac address" << endl;	
-		}
-	}
-	cout << "Searching common mac address process ends" << endl;
-}
-
 
 int main(int argc, const char * argv[])
 {
@@ -261,8 +99,7 @@ int main(int argc, const char * argv[])
 		pair<int, int> tempPair(atoi(sigStrMed.c_str()), macIndexMap[macAdd]);
 		locSigMacid[location].push_back(tempPair);		
 	}
-	data.close();
-	printCommonMac(locSigMacid);
+	//printCommonMac(locSigMacid);
 	clusterFingerprint(locSigMacid, 10, 5);
 	return 0;
 }	

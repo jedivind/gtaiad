@@ -189,49 +189,51 @@ double SimKeyCompare(const map<string, int> & ref, const map<string, int> & cur)
 	}
 	return numCommonStr/(sqrt(ref.size())*sqrt(cur.size()));
 }
-
 //Put the closest three locations in the vector<string> with respect to SimKeyCompare() 
 void SimKeyComparison(map<string, map<string, int> > & fingerprint, map<string, int> & test_finger, vector<string> & closestLoc)
 {
-	map<string, map<string, int> >::const_iterator it;
-	double  maxSim = -999;
-	double curSim;
-	string loc;
-	string loc1, loc2, loc3;
-	maxSim = -999;
-	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
-		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
-			maxSim = curSim;
-			loc = it->first;
-		}
-	}
-	closestLoc.push_back(loc);	
-	loc1 = loc;
+        map<string, map<string, int> >::const_iterator it;
+        double  maxSim = -999;
+        double curSim;
+        double epsilon = 0.000001;
+        string loc1("NonLoc"), loc2("NonLoc"), loc3("NonLoc");
+        maxSim = -999;
+        for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+                if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim && abs(curSim) > epsilon){
+                        maxSim = curSim;
+                        loc1 = it->first;
+                }
+        }
+        if(loc1.compare("NonLoc") != 0)
+                closestLoc.push_back(loc1);
+        else return;
 
-	maxSim = -999;
-	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
-		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
-			if(it->first != loc1){
-				maxSim = curSim;
-				loc = it->first;
-			}
-		}
-	}
-	closestLoc.push_back(loc);	
-	loc2 = loc;
+        maxSim = -999;
+        for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+                if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim && abs(curSim) > epsilon){
+                        if(it->first != loc1){
+                                maxSim = curSim;
+                                loc2 = it->first;
+                        }
+                }
+        }
+        if(loc2.compare("NonLoc") != 0)
+                closestLoc.push_back(loc2);
+        else return;
 
-	maxSim = -999;
-	for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
-		if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim){
-			if(it->first != loc1 && it->first != loc2){
-				maxSim = curSim;
-				loc = it->first;
-			}
-		}
-	}
-	closestLoc.push_back(loc);	
-	loc3 = loc;
+        maxSim = -999;
+        for(it=fingerprint.begin(); it!=fingerprint.end(); it++){
+                if((curSim = SimKeyCompare(it->second, test_finger)) > maxSim && abs(curSim) > epsilon){
+                        if(it->first != loc1 && it->first != loc2){
+                                maxSim = curSim;
+                               loc3 = it->first;
+                        }
+                }
+        }
+        if(loc3.compare("NonLoc") != 0)
+                closestLoc.push_back(loc3);
 }
+
 
 //Determine which floor it is by comparing the number of 2K locations and 3K locations
 void FloorCleaning(vector<string> & closestLoc, int & floor){
@@ -261,7 +263,10 @@ void FloorCleaning(vector<string> & closestLoc, int & floor){
 			}
 		}
 	}	
-	if(numFloorThree == numFloorTwo) {floor = 0; cout << "Inaccessible place, error\n"; }
+	if(numFloorThree == numFloorTwo) {
+		if(numFloorThree == 0){ floor = 0; cout << "No Similar locations, error\n"; }
+		else {floor = 0; cout << "Cannot detect floor number \n";}
+	}
 }
 
 //Cleaning out those far away locations, assuming closestLoc has at most 3 elements. An optimization here.
@@ -394,18 +399,18 @@ int main(int argc, const char * argv[])
 	}
 		
 	PickStrongFingerprint(locSigMac, fingerprint, 10, 5);
-	PickStrongFingerprint(test_sigmac, test_fingerprint, 10, 5);
+	PickStrongFingerprint(test_sigmac, test_fingerprint, 10, 1);
 	vector<string> closestLoc;
 	SimKeyComparison(fingerprint, test_fingerprint, closestLoc);
 	int floor;
 	FloorCleaning(closestLoc, floor);
 	ClusterCleaning(locMap, closestLoc); 
-	/*
+	
 	vector<string>::iterator vec_it;
 	for(vec_it=closestLoc.begin(); vec_it!=closestLoc.end(); vec_it++)
 		cout << *vec_it << "  ";
 	cout << endl;
-	*/
+	
 
 	int x, y;
 	double dis = BestPt(locMap, closestLoc, x, y);
