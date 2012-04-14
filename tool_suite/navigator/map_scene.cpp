@@ -1,5 +1,3 @@
-#include <QGraphicsSceneMouseEvent>
-#include <QDebug>
 #include <QtCore>
 #include <QGraphicsPixmapItem>
 #include <QRectF>
@@ -91,7 +89,7 @@ void MapScene::set_marker(const QString& loc_id, const QPointF& pos)
 
   m_location_dot_ptr = addEllipse(
       QRectF(pos.x()-diameter/2, pos.y()-diameter/2, diameter, diameter),
-      QPen(), QBrush(Qt::black));
+      QPen(Qt::cyan), QBrush(Qt::cyan));
 
 
 
